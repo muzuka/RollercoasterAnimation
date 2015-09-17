@@ -29,12 +29,23 @@ int main(int argc, char **argv)
 		exit(EXIT_FAILURE);
 	}
 	
-	window = new GLFWCreateWindow(width, height, "Rollercoaster Simulation CPSC 587", NULL, NULL);
+	window = glfwCreateWindow(width, height, "Rollercoaster Simulation CPSC 587", NULL, NULL);
 	if(!window) {
 		glfwTerminate();
 		exit(EXIT_FAILURE);
 	}
 	
+	glfwMakeContextCurrent(window);
+	
+	while(!glfwWindowShouldClose(window)) {
+		
+		
+		glfwSwapBuffers(window);
+ 		glfwPollEvents();
+	}
+	
+	glfwDestroyWindow(window);
+	glfwTerminate();
+	
 	return 0;
 }
-
