@@ -19,6 +19,9 @@ using namespace std;
 
 GLFWwindow* window;
 
+float const fov = 60.0f;
+float const nearPlane = 1.0f;
+float const farPlane = 1000.0f;
 int const width = 1024;
 int const height = 768;
 
@@ -36,10 +39,18 @@ int main(int argc, char **argv)
 	}
 	
 	glfwMakeContextCurrent(window);
+
+	glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(fov, width/height, nearPlane, farPlane);
 	
 	while(!glfwWindowShouldClose(window)) {
 		
+		glViewport(0, 0, width, height);
+		glClear(GL_COLOR_BUFFER_BIT);
+
 		
+
 		glfwSwapBuffers(window);
  		glfwPollEvents();
 	}
