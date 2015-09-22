@@ -25,10 +25,21 @@ float const farPlane = 1000.0f;
 int const width = 1024;
 int const height = 768;
 
+FileReader in;
+BSpline coasterTrack;
+
 int main(int argc, char **argv)
 {
 	
-	if (!glfwInit()) {
+	if(argc == 2) {
+    in(string(argv[1]));
+    coasterTrack = in.readBSpline();
+	}
+  else {
+    printf("Please give a BSpline\n");
+  }
+	
+	if(!glfwInit()) {
 		exit(EXIT_FAILURE);
 	}
 	
