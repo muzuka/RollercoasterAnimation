@@ -84,8 +84,8 @@ Vertex BSpline::getPoint(double u, bool drawGeo) {
             w = (u - knots.getValue(i))/(knots.getValue(i + r - 1) - knots.getValue(i));
             if(drawGeo) {
                 glBegin(GL_LINES);
-                glVertex2f(c.at(s).getX(), c.at(s).getY(), c.at(s).getZ());
-                glVertex2f(c.at(s+1).getX(), c.at(s+1).getY(), c.at(s+1).getZ());
+                glVertex3f(c.at(s).getX(), c.at(s).getY(), c.at(s).getZ());
+                glVertex3f(c.at(s+1).getX(), c.at(s+1).getY(), c.at(s+1).getZ());
                 glEnd();
             }
             c[s] = (c.at(s) * w) + (c.at(s+1) * (1 - w));
