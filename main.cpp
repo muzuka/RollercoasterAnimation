@@ -20,8 +20,10 @@
 #include <GLFW/glfw3.h>
 
 #include "BSpline.h"
+#include "FileReader.h"
 #include <stdlib.h>
 #include <math.h>
+#include <fstream>
 #include <iostream>
 
 using namespace std;
@@ -41,7 +43,7 @@ int main(int argc, char **argv)
 {
 	
 	if(argc == 2) {
-    in(string(argv[1]));
+    in = FileReader(string(argv[1]));
     coasterTrack = in.readBSpline();
 	}
   else {
