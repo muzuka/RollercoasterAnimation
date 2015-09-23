@@ -3,15 +3,15 @@
 #include <iostream>
 
 FileReader::FileReader() {
-  input = ifstream();
+  input = std::ifstream();
 }
 
-FileReader::FileReader(string file) {
-  input = ifstream(file.c_str());
+FileReader::FileReader(std::string file) {
+  input = std::ifstream(file.c_str());
 }
 
 BSpline FileReader::readBSpline() {
-  if(!input.open()) {
+  if(!input.is_open()) {
     printf("Fatal file error\n");
     exit(EXIT_FAILURE);
   }

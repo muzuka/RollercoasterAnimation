@@ -5,20 +5,20 @@
 #include "BSpline.h"
 #include <string>
 #include <iostream>
-#include <ifstream>
+#include <fstream>
 
 class FileReader {
 private:
 
-  ifstream input;
+  std::ifstream input;
 
 public:
 
 	FileReader();
-	FileReader(string);
+	FileReader(std::string);
 
   BSpline readBSpline();
 
-}
+};
 
 #endif
