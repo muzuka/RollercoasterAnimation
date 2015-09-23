@@ -1,6 +1,14 @@
 /*
  * main.cpp
  * 
+ * Rollercoaster Animation Features
+ * 	- File reader
+ *  - BSpline drawer/maniplulator
+ *  - Animation player
+ *  - Coaster model
+ *  - Model loader
+ *  - Background models
+ *  - Rollercoaster rails
  * 
  */
 
@@ -11,6 +19,7 @@
 #define GLFW_INCLUDE_GLU
 #include <GLFW/glfw3.h>
 
+#include "BSpline.h"
 #include <stdlib.h>
 #include <math.h>
 #include <iostream>
@@ -24,6 +33,9 @@ float const nearPlane = 1.0f;
 float const farPlane = 1000.0f;
 int const width = 1024;
 int const height = 768;
+
+
+
 
 int main(int argc, char **argv)
 {
