@@ -21,6 +21,7 @@
 
 #include "BSpline.h"
 #include "FileReader.h"
+#include <vector>
 #include <stdlib.h>
 #include <math.h>
 #include <fstream>
@@ -38,6 +39,12 @@ int const height = 768;
 
 FileReader in;
 BSpline coasterTrack;
+vector<Vertex> points;
+
+int   order      = 3;
+float increment  = 0.0f;
+float pointSize  = 10.0f;
+float lineLength = 0.01f;
 
 int main(int argc, char **argv)
 {
@@ -61,17 +68,52 @@ int main(int argc, char **argv)
 	}
 	
 	glfwMakeContextCurrent(window);
-
-	glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluPerspective(fov, width/height, nearPlane, farPlane);
 	
 	while(!glfwWindowShouldClose(window)) {
 		
 		glViewport(0, 0, width, height);
 		glClear(GL_COLOR_BUFFER_BIT);
+    
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(fov, width/height, nearPlane, farPlane);
+    
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
+    glTranslatef(0.0f, 0.0f, -1.0f);
+    
+    glColor3f(1.0f, 1.0f, 1.0f);
 
-		
+		glBegin(GL_POINTS);
+        for (controlPoint c : coasterTrack.getPoints()) {
+          glVertex3f(c.getX(), c.getY(), c.getZ());
+        }
+    glEnd();
+
+    if (coasterTrack.getPoints().size() > 1) {
+        for(float i = 0.0f; i <= 1.0f; i += lineLength) {
+            bool draw;
+            if(increment == i) {
+                draw = true;
+            }
+            else {
+                draw = false;
+            }
+            points.push_back(coasterTrack.getPoint(i, draw));
+        }
+
+        glBegin(GL_LINES);
+        for (int i = 0; i < points.size(); i++) {
+            glVertex3f(points[i].getX(), points[i].getY(), points[i].getZ());
+            if (i != points.size() - 1) {
+                glVertex3f(points[i+1].getX(), points[i+1].getY(), points[i+1].getZ());
+            }
+        }
+        glEnd();
+    }
+        
+    points.clear();
 
 		glfwSwapBuffers(window);
  		glfwPollEvents();
