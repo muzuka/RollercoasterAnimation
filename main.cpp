@@ -2,8 +2,8 @@
  * main.cpp
  * 
  * Rollercoaster Animation Features
- * 	- File reader
- *  - BSpline drawer/maniplulator
+ * 	+ File reader
+ *  + BSpline drawer 
  *  - Animation player
  *  - Coaster model
  *  - Model loader
@@ -41,7 +41,7 @@ FileReader input;
 BSpline coasterTrack;
 vector<Vertex> points;
 
-
+bool  showPoints = false;
 int   order      = 3;
 float rotAngle   = 0.0f;
 float increment  = 0.0f;
@@ -51,6 +51,9 @@ float lineLength = 0.01f;
 void keyboardFunc(GLFWwindow* win, int key, int scancode, int action, int mods) {
     if(action == GLFW_PRESS) {
         switch(key) {
+            case GLFW_KEY_C:
+                showPoints = !showPoints;
+                break;
             case GLFW_KEY_LEFT:
                 rotAngle -= 15.0f;
                 break;
@@ -102,15 +105,16 @@ int main(int argc, char **argv)
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     glRotatef(rotAngle, 0.0f, 1.0f, 0.0f);
-    //glTranslatef(0.0f, 0.0f, -5.0f);
     
     glColor3f(1.0f, 1.0f, 1.0f);
 
-	glBegin(GL_POINTS);
-        for (controlPoint c : coasterTrack.getPoints()) {
-          glVertex3f(c.getX(), c.getY(), c.getZ());
-        }
-    glEnd();
+    if(showPoints) {
+      glBegin(GL_POINTS);
+          for (controlPoint c : coasterTrack.getPoints()) {
+            glVertex3f(c.getX(), c.getY(), c.getZ());
+          }
+      glEnd();
+    }
 
     if (coasterTrack.getPoints().size() > 1) {
         for(float i = 0.0f; i <= 1.0f; i += lineLength) {
