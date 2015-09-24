@@ -37,25 +37,43 @@ float const farPlane = 1000.0f;
 int const width = 1024;
 int const height = 768;
 
-FileReader in;
+FileReader input;
 BSpline coasterTrack;
 vector<Vertex> points;
 
+
 int   order      = 3;
+float rotAngle   = 0.0f;
 float increment  = 0.0f;
 float pointSize  = 10.0f;
 float lineLength = 0.01f;
+
+void keyboardFunc(GLFWwindow* win, int key, int scancode, int action, int mods) {
+    if(action == GLFW_PRESS) {
+        switch(key) {
+            case GLFW_KEY_LEFT:
+                rotAngle -= 15.0f;
+                break;
+            case GLFW_KEY_RIGHT:
+                rotAngle += 15.0f;
+                break;
+            default:
+                break;
+        }
+    }
+}
 
 int main(int argc, char **argv)
 {
 	
   if(argc == 2) {
-    in = FileReader(string(argv[1]));
-    coasterTrack = in.readBSpline();
+    input = FileReader(string(argv[1]));
+    coasterTrack = input.readBSpline();
     printf("%lu\n", coasterTrack.getPoints().size());
   }
   else {
     printf("Please give a BSpline\n");
+    exit(EXIT_FAILURE);
   }
 	
 	if(!glfwInit()) {
@@ -69,6 +87,8 @@ int main(int argc, char **argv)
 	}
 	
 	glfwMakeContextCurrent(window);
+    glfwSetKeyCallback(window, keyboardFunc);
+    glPointSize(pointSize);
 	
 	while(!glfwWindowShouldClose(window)) {
 		
@@ -81,8 +101,8 @@ int main(int argc, char **argv)
     
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
-    glTranslatef(0.0f, 0.0f, -1.0f);
+    glRotatef(rotAngle, 0.0f, 1.0f, 0.0f);
+    //glTranslatef(0.0f, 0.0f, -5.0f);
     
     glColor3f(1.0f, 1.0f, 1.0f);
 
