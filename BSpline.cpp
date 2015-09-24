@@ -4,7 +4,7 @@
 #define _GLFW_USE_OPENGL
 
 #ifdef __APPLE__
-#include "glfw3.h"
+#include "GLFW/glfw3.h"
 #else
 #define GLFW_INCLUDE
 #include <GLFW/glfw3.h>
