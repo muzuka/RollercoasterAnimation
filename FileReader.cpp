@@ -1,4 +1,13 @@
 
+/*
+ * FileReader class
+ *
+ * reads control points from a file
+ *
+ * Sean Brown
+ *
+ */
+
 #include "FileReader.h"
 #include <iostream>
 
@@ -29,6 +38,10 @@ BSpline FileReader::readBSpline() {
     input >> w;
     
     newSpline.addPoint(controlPoint(x, y, z, w, 1.0f));
+  }
+  
+  for(int i = 0; i < newSpline.getOrder(); i++) {
+    newSpline.addPoint(newSpline.getPoints().at(i));
   }
   
   return newSpline;

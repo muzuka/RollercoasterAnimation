@@ -1,4 +1,13 @@
 
+/*
+ * FileReader class
+ *
+ * reads control points from a file
+ *
+ * Sean Brown
+ *
+ */
+
 #ifndef FILEREADER_H
 #define FILEREADER_H
 
