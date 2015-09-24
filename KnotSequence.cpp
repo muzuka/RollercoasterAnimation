@@ -1,4 +1,15 @@
 
+/*
+ * knot sequence class
+ *  - represents the knot sequence and manipulates it
+ *  - can be queried with getValue
+ *
+ * From CPSC 589
+ *
+ * Sean Brown
+ *
+ */
+
 #include "KnotSequence.h"
 #include <stdio.h>
 #include <math.h>

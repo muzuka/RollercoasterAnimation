@@ -2,12 +2,11 @@
 #define _KNOTSEQUENCE_H_
 
 /*
- * CPSC 589
- *
  * knot sequence class
  *  - represents the knot sequence and manipulates it
  *  - can be queried with getValue
  *
+ * From CPSC 589
  *
  * Sean Brown
  *
