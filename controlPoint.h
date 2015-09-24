@@ -5,6 +5,8 @@
  * CPSC 589
  *
  * Control Point class
+ * 
+ * From CPSC 589
  *
  * Sean Brown
  *

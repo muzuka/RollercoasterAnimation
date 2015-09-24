@@ -1,13 +1,13 @@
 /*
- * CPSC 589
- *
  * vertex class
  *  - represents vertex that forms the curve.
  *
+ * From CPSC 589
  *
  * Sean Brown
  *
  */
+
 
  #include "Vertex.h"
 
