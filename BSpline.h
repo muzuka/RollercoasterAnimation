@@ -5,6 +5,8 @@
  * B Spline class
  *
  * contains a collection of control points
+ * 
+ * From CPSC 589
  *
  * Sean Brown
  *
@@ -29,6 +31,7 @@ public:
 	BSpline(int);
 
 	void setOrder(int);
+	int  getOrder();
 
 	void setX(int, double);
 	void setY(int, double);

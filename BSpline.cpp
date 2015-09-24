@@ -1,4 +1,15 @@
 
+/*
+ * B Spline implementation file
+ *
+ * contains a collection of control points
+ * 
+ * From CPSC 589
+ *
+ * Sean Brown
+ *
+ */
+
 #include "BSpline.h"
 
 #define _GLFW_USE_OPENGL
@@ -22,6 +33,10 @@ BSpline::BSpline(int o) {
 
 void BSpline::setOrder(int o) {
 	order = o;
+}
+
+int BSpline::getOrder() {
+	return order;
 }
 
 void BSpline::setX(int pos, double x) {
