@@ -25,7 +25,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <fstream>
-#include <iostream>
+#include <stdio.h>
 
 using namespace std;
 
@@ -49,10 +49,11 @@ float lineLength = 0.01f;
 int main(int argc, char **argv)
 {
 	
-	if(argc == 2) {
+  if(argc == 2) {
     in = FileReader(string(argv[1]));
     coasterTrack = in.readBSpline();
-	}
+    printf("%lu\n", coasterTrack.getPoints().size());
+  }
   else {
     printf("Please give a BSpline\n");
   }
@@ -71,8 +72,8 @@ int main(int argc, char **argv)
 	
 	while(!glfwWindowShouldClose(window)) {
 		
-		glViewport(0, 0, width, height);
-		glClear(GL_COLOR_BUFFER_BIT);
+	glViewport(0, 0, width, height);
+	glClear(GL_COLOR_BUFFER_BIT);
     
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -85,7 +86,7 @@ int main(int argc, char **argv)
     
     glColor3f(1.0f, 1.0f, 1.0f);
 
-		glBegin(GL_POINTS);
+	glBegin(GL_POINTS);
         for (controlPoint c : coasterTrack.getPoints()) {
           glVertex3f(c.getX(), c.getY(), c.getZ());
         }
