@@ -42,6 +42,7 @@ BSpline coasterTrack;
 vector<Vertex> points;
 
 bool  showPoints = false;
+
 int   order      = 3;
 float rotAngle   = 0.0f;
 float increment  = 0.0f;
@@ -53,6 +54,12 @@ void keyboardFunc(GLFWwindow* win, int key, int scancode, int action, int mods) 
         switch(key) {
             case GLFW_KEY_C:
                 showPoints = !showPoints;
+                break;
+            case GLFW_KEY_M:
+                increment += 0.1f;
+                break;
+            case GLFW_KEY_N:
+                increment -= 0.1f;
                 break;
             case GLFW_KEY_LEFT:
                 rotAngle -= 15.0f;
