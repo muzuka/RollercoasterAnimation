@@ -29,8 +29,11 @@
 
 using namespace std;
 
+enum {NONE, ROTATE, ZOOM};
+
 GLFWwindow* window;
 
+float const rotAngleScale = 100.0f;
 float const fov = 60.0f;
 float const nearPlane = 1.0f;
 float const farPlane = 1000.0f;
@@ -43,11 +46,85 @@ vector<Vertex> points;
 
 bool  showPoints = false;
 
+Vertex lastPoint;
+int   movement   = NONE;
 int   order      = 3;
-float rotAngle   = 0.0f;
+float xRot       = 0.0f;
+float yRot       = 0.0f;
 float increment  = 0.0f;
 float pointSize  = 10.0f;
 float lineLength = 0.01f;
+
+// given cursor position get projected position
+Vertex getTrackballPoint(double x, double y) {
+    Vertex retVector;
+    float d;
+
+    retVector.setX(((2.0f * x) - width) / width);
+    retVector.setY((height - (2.0f * y)) / height);
+    retVector.setZ(0.0f);
+    d = retVector.length();
+
+    if(d >= 1.0f)
+        d = 1.0f;
+
+    retVector.setZ(sqrt(1.001 - (d * d)));
+    retVector.normalize();
+
+    return retVector;
+}
+
+void mousePosFunc(GLFWwindow* win, double x, double y) {
+
+    Vertex direction;
+    Vertex currentPoint;
+    Vertex rotAxis;
+    double velocity, rotAngle;
+    GLfloat objectForm[16];
+
+    if(movement == ROTATE) {
+
+        printf("Rotating\n");
+        currentPoint = getTrackballPoint(x, y);
+        direction = currentPoint - lastPoint;
+        velocity = direction.length();
+
+        if(velocity > 0.0001) {
+            rotAxis = Vertex::crossProduct(lastPoint, currentPoint);
+            rotAngle = velocity * rotAngleScale;
+
+            printf("Rotating by %f\n", rotAngle);
+
+            glMatrixMode(GL_MODELVIEW);
+            glGetFloatv(GL_MODELVIEW_MATRIX, objectForm);
+            glLoadIdentity();
+            glRotatef(rotAngle, rotAxis.getX(), rotAxis.getY(), rotAxis.getZ());
+            glMultMatrixf(objectForm);
+
+            glfwSwapBuffers(window);
+        }
+    }
+}
+
+void mouseFunc(GLFWwindow* win, int button, int action, int mods) {
+    
+    double x, y;
+
+    glfwGetCursorPos(window, &x, &y);
+
+    if(action == GLFW_PRESS && button == GLFW_MOUSE_BUTTON_LEFT) {
+        movement = ROTATE;
+
+        lastPoint = getTrackballPoint(x, y);
+
+        printf("%f %f\n", x, y);
+
+    }
+    if(action == GLFW_RELEASE && button == GLFW_MOUSE_BUTTON_LEFT) {
+        movement = NONE;
+    }
+
+}
 
 void keyboardFunc(GLFWwindow* win, int key, int scancode, int action, int mods) {
     if(action == GLFW_PRESS) {
@@ -62,10 +139,16 @@ void keyboardFunc(GLFWwindow* win, int key, int scancode, int action, int mods) 
                 increment -= 0.1f;
                 break;
             case GLFW_KEY_LEFT:
-                rotAngle -= 15.0f;
+                yRot -= 15.0f;
                 break;
             case GLFW_KEY_RIGHT:
-                rotAngle += 15.0f;
+                yRot += 15.0f;
+                break;
+            case GLFW_KEY_UP:
+                xRot += 15.0f;
+                break;
+            case GLFW_KEY_DOWN:
+                xRot -= 15.0f;
                 break;
             default:
                 break;
@@ -97,6 +180,8 @@ int main(int argc, char **argv)
 	}
 	
 	glfwMakeContextCurrent(window);
+    glfwSetCursorPosCallback(window, mousePosFunc);
+    glfwSetMouseButtonCallback(window, mouseFunc);
     glfwSetKeyCallback(window, keyboardFunc);
     glPointSize(pointSize);
 	
@@ -111,7 +196,9 @@ int main(int argc, char **argv)
     
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    glRotatef(rotAngle, 0.0f, 1.0f, 0.0f);
+    glTranslatef(0.0f, 0.0f, -30.0f);
+    glRotatef(xRot, 1.0f, 0.0f, 0.0f);
+    glRotatef(yRot, 0.0f, 1.0f, 0.0f);
     
     glColor3f(1.0f, 1.0f, 1.0f);
 
@@ -147,8 +234,9 @@ int main(int argc, char **argv)
         
     points.clear();
 
-		glfwSwapBuffers(window);
- 		glfwPollEvents();
+    glfwSwapBuffers(window);
+ 	glfwPollEvents();
+
 	}
 	
 	glfwDestroyWindow(window);
