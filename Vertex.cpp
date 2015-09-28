@@ -29,6 +29,10 @@ Vertex::Vertex() {
  	return Vertex(v.x + this->x, v.y + this->y, v.z + this->z);
  }
 
+ Vertex Vertex::operator-(Vertex v) {
+ 	return Vertex(v.x - this->x, v.y - this->y, v.z - this->z);
+ }
+
 double Vertex::getX() {
 	return this->x;
 }
@@ -51,4 +55,29 @@ void Vertex::setY(double y) {
 
 void Vertex::setZ(double z) {
 	this->z = z;
+}
+
+Vertex Vertex::crossProduct(Vertex a, Vertex b) {
+
+	double x = (a.y * b.y) - (a.z * b.z);
+	double y = (a.z * b.x) - (a.x * b.z);
+	double z = (a.x * b.y) - (a.y * b.x);
+
+	return Vertex(x, y, z);
+}
+
+double Vertex::dotProduct(Vertex a, Vertex b) {
+	return (a.x * b.x) + (a.y * b.y) + (a.z * b.z);
+}
+
+double Vertex::length() {
+	return sqrt(x * x + y * y + z * z);
+}
+
+void Vertex::normalize() {
+	double len = length();
+
+	this->x = x / len;
+	this->y = y / len;
+	this->z = z / len;
 }

@@ -11,6 +11,8 @@
  *
  */
 
+ #include <math.h>
+
 class Vertex {
 	
 protected:
@@ -22,6 +24,7 @@ public:
 
 	Vertex operator*(double);
 	Vertex operator+(Vertex);
+	Vertex operator-(Vertex);
 
 	double getX();
 	double getY();
@@ -30,6 +33,12 @@ public:
 	void setX(double);
 	void setY(double);
 	void setZ(double);
+
+	static Vertex crossProduct(Vertex, Vertex);
+	static double dotProduct(Vertex, Vertex);
+
+	double length();
+	void normalize();
 
 };
 
