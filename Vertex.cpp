@@ -81,3 +81,7 @@ void Vertex::normalize() {
 	this->y = y / len;
 	this->z = z / len;
 }
+
+void Vertex::print() {
+  printf("%.2f %.2f %.2f\n", x, y, z);
+}

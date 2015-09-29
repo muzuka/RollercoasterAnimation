@@ -12,6 +12,7 @@
  */
 
  #include <math.h>
+ #include <stdio.h>
 
 class Vertex {
 	
@@ -39,6 +40,8 @@ public:
 
 	double length();
 	void normalize();
+  
+  void print();
 
 };
 
