@@ -97,13 +97,14 @@ void mousePosFunc(GLFWwindow* win, double x, double y) {
             rotAxis = Vertex::crossProduct(lastPoint, currentPoint);
             rotAngle = velocity * rotAngleScale;
 
+            rotAxis.print();
             printf("Rotating by %f\n", rotAngle);
 
             glMatrixMode(GL_MODELVIEW);
-            glGetFloatv(GL_MODELVIEW_MATRIX, objectForm);
+            //glGetFloatv(GL_MODELVIEW_MATRIX, objectForm);
             glLoadIdentity();
             glRotatef(rotAngle, rotAxis.getX(), rotAxis.getY(), rotAxis.getZ());
-            glMultMatrixf(objectForm);
+            //glMultMatrixf(objectForm);
         }
     }
 }
