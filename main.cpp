@@ -49,11 +49,15 @@ bool  showPoints = false;
 Vertex lastPoint;
 int   movement   = NONE;
 int   order      = 3;
+float zoom       = -30.0f;
 float xRot       = 0.0f;
 float yRot       = 0.0f;
 float increment  = 0.0f;
 float pointSize  = 10.0f;
 float lineLength = 0.01f;
+
+float u_value    = 1.0f;
+Vertex position;
 
 // given cursor position get projected position
 Vertex getTrackballPoint(double x, double y) {
@@ -100,8 +104,6 @@ void mousePosFunc(GLFWwindow* win, double x, double y) {
             glLoadIdentity();
             glRotatef(rotAngle, rotAxis.getX(), rotAxis.getY(), rotAxis.getZ());
             glMultMatrixf(objectForm);
-
-            glfwSwapBuffers(window);
         }
     }
 }
@@ -126,9 +128,20 @@ void mouseFunc(GLFWwindow* win, int button, int action, int mods) {
 
 }
 
+void scrollFunc(GLFWwindow* win, double x, double y) {
+
+    zoom += y;
+}
+
 void keyboardFunc(GLFWwindow* win, int key, int scancode, int action, int mods) {
     if(action == GLFW_PRESS) {
         switch(key) {
+            case GLFW_KEY_ENTER:
+                u_value -= 0.01f;
+                if(u_value < 0.0f) {
+                    u_value = 1.0f;
+                }
+                break;
             case GLFW_KEY_C:
                 showPoints = !showPoints;
                 break;
@@ -183,7 +196,7 @@ int main(int argc, char **argv)
     glfwSetCursorPosCallback(window, mousePosFunc);
     glfwSetMouseButtonCallback(window, mouseFunc);
     glfwSetKeyCallback(window, keyboardFunc);
-    glPointSize(pointSize);
+    glfwSetScrollCallback(window, scrollFunc);
 	
 	while(!glfwWindowShouldClose(window)) {
 		
@@ -196,12 +209,15 @@ int main(int argc, char **argv)
     
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    glTranslatef(0.0f, 0.0f, -30.0f);
+    glTranslatef(0.0f, 0.0f, zoom);
     glRotatef(xRot, 1.0f, 0.0f, 0.0f);
     glRotatef(yRot, 0.0f, 1.0f, 0.0f);
     
     glColor3f(1.0f, 1.0f, 1.0f);
 
+    glPointSize(pointSize);
+
+    // draw control points
     if(showPoints) {
       glBegin(GL_POINTS);
           for (controlPoint c : coasterTrack.getPoints()) {
@@ -210,7 +226,21 @@ int main(int argc, char **argv)
       glEnd();
     }
 
+    //Draw dot/ coaster
+    glPointSize(20.0f);
+    glColor3f(1.0f, 0.0f, 0.0f);
+
+    position = coasterTrack.getPoint(u_value, false);
+
+    glBegin(GL_POINTS);
+        glVertex3f(position.getX(), position.getY(), position.getZ());
+    glEnd();
+
+    glColor3f(1.0f, 1.0f, 1.0f);
+
     if (coasterTrack.getPoints().size() > 1) {
+
+        // load points to draw
         for(float i = 0.0f; i <= 1.0f; i += lineLength) {
             bool draw;
             if(increment == i) {
@@ -222,13 +252,14 @@ int main(int argc, char **argv)
             points.push_back(coasterTrack.getPoint(i, draw));
         }
 
+        // draw B-spline
         glBegin(GL_LINES);
-        for (int i = 0; i < points.size(); i++) {
-            glVertex3f(points[i].getX(), points[i].getY(), points[i].getZ());
-            if (i != points.size() - 1) {
-                glVertex3f(points[i+1].getX(), points[i+1].getY(), points[i+1].getZ());
+            for (int i = 0; i < points.size(); i++) {
+                glVertex3f(points[i].getX(), points[i].getY(), points[i].getZ());
+                if (i != points.size() - 1) {
+                    glVertex3f(points[i+1].getX(), points[i+1].getY(), points[i+1].getZ());
+                }
             }
-        }
         glEnd();
     }
         
