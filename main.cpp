@@ -53,13 +53,13 @@ int   movement   = NONE;
 int   order      = 3;
 float zoom       = -30.0f;
 float xRot       = 0.0f;
-float yRot       = 0.0f;
+float zRot       = 0.0f;
 float increment  = 0.0f;
 float pointSize  = 10.0f;
 float lineLength = 0.01f;
 
 clock_t clicks;
-float velocity   = 0.001f;
+float velocity   = 0.03f;
 float u_value    = 1.0f;
 Vertex position;
 
@@ -142,7 +142,6 @@ void keyboardFunc(GLFWwindow* win, int key, int scancode, int action, int mods) 
     if(action == GLFW_PRESS) {
         switch(key) {
             case GLFW_KEY_ENTER:
-                playAnim = true;
                 u_value = 1.0f;
                 break;
             case GLFW_KEY_C:
@@ -155,10 +154,10 @@ void keyboardFunc(GLFWwindow* win, int key, int scancode, int action, int mods) 
                 increment -= 0.1f;
                 break;
             case GLFW_KEY_LEFT:
-                yRot -= 15.0f;
+                zRot -= 15.0f;
                 break;
             case GLFW_KEY_RIGHT:
-                yRot += 15.0f;
+                zRot += 15.0f;
                 break;
             case GLFW_KEY_UP:
                 xRot += 15.0f;
@@ -215,7 +214,7 @@ int main(int argc, char **argv)
     glLoadIdentity();
     glTranslatef(0.0f, 0.0f, zoom);
     glRotatef(xRot, 1.0f, 0.0f, 0.0f);
-    glRotatef(yRot, 0.0f, 1.0f, 0.0f);
+    glRotatef(zRot, 0.0f, 0.0f, 1.0f);
     
     glColor3f(1.0f, 1.0f, 1.0f);
 
@@ -246,6 +245,9 @@ int main(int argc, char **argv)
         u_value -= distance;
 
         position = coasterTrack.getPoint(u_value);
+        
+        printf("u = %f\n", u_value);
+        position.print();
 
         glBegin(GL_POINTS);
             glVertex3f(position.getX(), position.getY(), position.getZ());
