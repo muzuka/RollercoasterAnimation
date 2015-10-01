@@ -23,6 +23,7 @@
 #include "FileReader.h"
 #include <vector>
 #include <stdlib.h>
+#include <time.h>
 #include <math.h>
 #include <fstream>
 #include <stdio.h>
@@ -33,18 +34,19 @@ enum {NONE, ROTATE, ZOOM};
 
 GLFWwindow* window;
 
-float const rotAngleScale = 100.0f;
-float const fov = 60.0f;
-float const nearPlane = 1.0f;
-float const farPlane = 1000.0f;
-int const width = 1024;
-int const height = 768;
+float const rotAngleScale   = 100.0f;
+float const fov             = 60.0f;
+float const nearPlane       = 1.0f;
+float const farPlane        = 1000.0f;
+int const width             = 1024;
+int const height            = 768;
 
 FileReader input;
 BSpline coasterTrack;
 vector<Vertex> points;
 
-bool  showPoints = false;
+bool playAnim = false;
+bool showPoints = false;
 
 Vertex lastPoint;
 int   movement   = NONE;
@@ -56,6 +58,8 @@ float increment  = 0.0f;
 float pointSize  = 10.0f;
 float lineLength = 0.01f;
 
+clock_t clicks;
+float velocity   = 0.001f;
 float u_value    = 1.0f;
 Vertex position;
 
@@ -138,10 +142,8 @@ void keyboardFunc(GLFWwindow* win, int key, int scancode, int action, int mods) 
     if(action == GLFW_PRESS) {
         switch(key) {
             case GLFW_KEY_ENTER:
-                u_value -= 0.01f;
-                if(u_value < 0.0f) {
-                    u_value = 1.0f;
-                }
+                playAnim = true;
+                u_value = 1.0f;
                 break;
             case GLFW_KEY_C:
                 showPoints = !showPoints;
@@ -193,6 +195,7 @@ int main(int argc, char **argv)
 		exit(EXIT_FAILURE);
 	}
 	
+    clicks = clock();
 	glfwMakeContextCurrent(window);
     glfwSetCursorPosCallback(window, mousePosFunc);
     glfwSetMouseButtonCallback(window, mouseFunc);
@@ -219,6 +222,7 @@ int main(int argc, char **argv)
     glPointSize(pointSize);
 
     // draw control points
+    // ********************************************************
     if(showPoints) {
       glBegin(GL_POINTS);
           for (controlPoint c : coasterTrack.getPoints()) {
@@ -227,15 +231,29 @@ int main(int argc, char **argv)
       glEnd();
     }
 
+
     //Draw dot/ coaster
+    // ********************************************************
     glPointSize(20.0f);
     glColor3f(1.0f, 0.0f, 0.0f);
 
-    position = coasterTrack.getPoint(u_value, false);
+    if(playAnim) {
+        // get new u-value
+        clicks = clock() - clicks;
+        float time = clicks/CLOCKS_PER_SEC;
+        float distance = velocity * time;
 
-    glBegin(GL_POINTS);
-        glVertex3f(position.getX(), position.getY(), position.getZ());
-    glEnd();
+        u_value -= distance;
+
+        position = coasterTrack.getPoint(u_value);
+
+        glBegin(GL_POINTS);
+            glVertex3f(position.getX(), position.getY(), position.getZ());
+        glEnd();
+    }
+
+    
+
 
     glColor3f(1.0f, 1.0f, 1.0f);
 
@@ -243,19 +261,12 @@ int main(int argc, char **argv)
 
         // load points to draw
         for(float i = 0.0f; i <= 1.0f; i += lineLength) {
-            bool draw;
-            if(increment == i) {
-                draw = true;
-            }
-            else {
-                draw = false;
-            }
-            points.push_back(coasterTrack.getPoint(i, draw));
+            points.push_back(coasterTrack.getPoint(i));
         }
 
         // draw B-spline
         glBegin(GL_LINES);
-            for (int i = 0; i < points.size(); i++) {
+            for (int i = 4; i < points.size(); i++) {
                 glVertex3f(points[i].getX(), points[i].getY(), points[i].getZ());
                 if (i != points.size() - 1) {
                     glVertex3f(points[i+1].getX(), points[i+1].getY(), points[i+1].getZ());
