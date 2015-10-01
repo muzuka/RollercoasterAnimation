@@ -44,7 +44,7 @@ public:
 
 	std::vector<controlPoint> getPoints();
 
-	Vertex getPoint(double, bool);
+	Vertex getPoint(double);
 
 };
 
