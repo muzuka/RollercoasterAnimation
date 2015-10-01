@@ -37,7 +37,7 @@ BSpline FileReader::readBSpline() {
     input >> z;
     input >> w;
     
-    newSpline.addPoint(controlPoint(x, y, z, w, 1.0f));
+    newSpline.addPoint(controlPoint(FREE, x, y, z, w, 1.0f));
   }
   
   for(int i = 0; i < newSpline.getOrder(); i++) {
