@@ -142,6 +142,7 @@ void keyboardFunc(GLFWwindow* win, int key, int scancode, int action, int mods) 
     if(action == GLFW_PRESS) {
         switch(key) {
             case GLFW_KEY_ENTER:
+                playAnim = true;
                 u_value = 1.0f;
                 break;
             case GLFW_KEY_C:
@@ -268,7 +269,7 @@ int main(int argc, char **argv)
 
         // draw B-spline
         glBegin(GL_LINES);
-            for (int i = 4; i < points.size(); i++) {
+            for (int i = 0; i < points.size(); i++) {
                 glVertex3f(points[i].getX(), points[i].getY(), points[i].getZ());
                 if (i != points.size() - 1) {
                     glVertex3f(points[i+1].getX(), points[i+1].getY(), points[i+1].getZ());
