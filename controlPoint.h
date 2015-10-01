@@ -14,16 +14,24 @@
 
  #include "Vertex.h"
 
+enum Tracktype {CHAIN, FREE, END};
+
 class controlPoint : public Vertex {
 	
 private:
-    double size;
-	double weight;
+	Tracktype	type;
+    double 		size;
+	double 		weight;
 
 public:
 	controlPoint();
 	controlPoint(double, double, double, double, double);
 	controlPoint(double, double, double, double);
+	controlPoint(Tracktype, double, double, double, double, double);
+	controlPoint(Tracktype, double, double, double, double);
+
+	Tracktype getType();
+	void setType(Tracktype);
 
     bool isClicked(double, double);
 };
