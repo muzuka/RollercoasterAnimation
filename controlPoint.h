@@ -14,16 +14,16 @@
 
  #include "Vertex.h"
 
-class controlPoint : public Vertex {
+class Controlpoint : public Vertex {
 	
 private:
   double 		size;
 	double 		weight;
 
 public:
-	controlPoint();
-	controlPoint(double, double, double, double, double);
-	controlPoint(double, double, double, double);
+	Controlpoint();
+	Controlpoint(double, double, double, double, double);
+	Controlpoint(double, double, double, double);
 
   bool isClicked(double, double);
 };

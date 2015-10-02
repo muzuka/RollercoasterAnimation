@@ -9,13 +9,13 @@
  *
  */
 
- #include "controlPoint.h"
+ #include "Controlpoint.h"
 
-controlPoint::controlPoint() {
+Controlpoint::Controlpoint() {
 	
 }
 
- controlPoint::controlPoint(double x, double y, double z, double w, double s) {
+ Controlpoint::Controlpoint(double x, double y, double z, double w, double s) {
  	this->x 		= x;
  	this->y 		= y;
  	this->z 		= z;
@@ -23,7 +23,7 @@ controlPoint::controlPoint() {
     this->size 		= s;
  }
 
- controlPoint::controlPoint(double x, double y, double z, double s) {
+ Controlpoint::Controlpoint(double x, double y, double z, double s) {
  	this->x 		= x;
  	this->y 		= y;
  	this->z 		= z;
@@ -31,7 +31,7 @@ controlPoint::controlPoint() {
     this->size 		= s;
  }
 
-bool controlPoint::isClicked(double x, double y) {
+bool Controlpoint::isClicked(double x, double y) {
     
     double dis = size/2.0f;
     
