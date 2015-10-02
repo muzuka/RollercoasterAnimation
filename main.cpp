@@ -240,8 +240,10 @@ int main(int argc, char **argv)
     if(playAnim) {
         // get new u-value
         clicks = clock() - clicks;
-        float time = clicks/CLOCKS_PER_SEC;
+        float time = ((float)clicks)/CLOCKS_PER_SEC;
         float distance = velocity * time;
+
+        printf("u - %f = %f\n", distance, u_value);
 
         u_value -= distance;
 
