@@ -15,8 +15,7 @@
  #include "Vertex.h"
 
 class Controlpoint : public Vertex {
-	
-private:
+protected:
   double 		size;
 	double 		weight;
 
