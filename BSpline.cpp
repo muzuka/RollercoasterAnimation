@@ -40,45 +40,45 @@ int BSpline::getOrder() {
 }
 
 void BSpline::setX(int pos, double x) {
-	Controlpoints.at(pos).setX(x);
+	controlpoints.at(pos).setX(x);
 }
 
 void BSpline::setY(int pos, double y) {
-	Controlpoints.at(pos).setY(y);
+	controlpoints.at(pos).setY(y);
 }
 
 void BSpline::setZ(int pos, double z) {
-    Controlpoints.at(pos).setZ(z);
+    controlpoints.at(pos).setZ(z);
 }
 
 void BSpline::addPoint(Controlpoint point) {
-	Controlpoints.push_back(point);
-	knots = KnotSequence((int)Controlpoints.size(), order);
+	controlpoints.push_back(point);
+	knots = KnotSequence((int)controlpoints.size(), order);
 }
 
 void BSpline::removePoint(int index) {
-	Controlpoints.erase(Controlpoints.begin() + index);
-	knots = KnotSequence((int)Controlpoints.size(), order);
+	controlpoints.erase(controlpoints.begin() + index);
+	knots = KnotSequence((int)controlpoints.size(), order);
 }
 
 void BSpline::updateKnots() {
-	knots = KnotSequence((int)Controlpoints.size(), order);
+	knots = KnotSequence((int)controlpoints.size(), order);
 }
 
 void BSpline::clearPoints() {
-	Controlpoints.clear();
+	controlpoints.clear();
 	knots = KnotSequence(0, order);
 }
 
 std::vector<Controlpoint> BSpline::getPoints() {
-	return Controlpoints;
+	return controlpoints;
 }
 
 Vertex BSpline::getPoint(double u) {
   double w = 0;
 	int k = order;
 	int delta;
-	std::vector<Controlpoint> p = Controlpoints;
+	std::vector<Controlpoint> p = controlpoints;
 	std::vector<Vertex> c = std::vector<Vertex>();
 	std::vector<Controlpoint> e;
 	

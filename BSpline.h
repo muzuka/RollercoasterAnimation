@@ -19,11 +19,11 @@
 
 class BSpline {
 
-private:
+protected:
 
 	int order;
 	KnotSequence knots;
-	std::vector<Controlpoint> Controlpoints;
+	std::vector<Controlpoint> controlpoints;
 
 public:
 
