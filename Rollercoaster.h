@@ -12,14 +12,29 @@
  *
  */
  
-#include "BSPline.h"
+#include "BSpline.h"
+#include "Trackpoint.h"
 
 class Rollercoaster : public BSpline {
 private:
   std::vector<Trackpoint> tracks;
   
 public:
+
+  Rollercoaster();
+  Rollercoaster(int);
   
+  void setX(int, double);
+	void setY(int, double);
+	void setZ(int, double);
+  
+  void addPoint(Trackpoint);
+  void removeTrack(int);
+  
+  std::vector<Trackpoint> getTracks();
+  void clearPoints();
+  
+  Trackpoint getTrack(double);
 };
 
 #endif
