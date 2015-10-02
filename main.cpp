@@ -144,6 +144,7 @@ void keyboardFunc(GLFWwindow* win, int key, int scancode, int action, int mods) 
         switch(key) {
             case GLFW_KEY_ENTER:
                 playAnim = true;
+                lastTime = chrono::high_resolution_clock::now();
                 u_value = 1.0f;
                 break;
             case GLFW_KEY_C:
@@ -195,8 +196,6 @@ int main(int argc, char **argv)
 		glfwTerminate();
 		exit(EXIT_FAILURE);
 	}
-    
-    lastTime = chrono::high_resolution_clock::now();
     
     glfwMakeContextCurrent(window);
     glfwSetCursorPosCallback(window, mousePosFunc);
