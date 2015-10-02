@@ -23,6 +23,9 @@ public:
 	Controlpoint();
 	Controlpoint(double, double, double, double, double);
 	Controlpoint(double, double, double, double);
+  
+  double getSize();
+  double getWeight();
 
   bool isClicked(double, double);
 };

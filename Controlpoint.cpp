@@ -30,6 +30,14 @@ Controlpoint::Controlpoint() {
     this->weight 	= 0.0f;
     this->size 		= s;
  }
+ 
+ double Controlpoint::getSize() {
+   return size;
+ }
+ 
+ double Controlpoint::getWeight() {
+   return weight;
+ }
 
 bool Controlpoint::isClicked(double x, double y) {
     
