@@ -46,3 +46,31 @@ BSpline FileReader::readBSpline() {
   
   return newSpline;
 }
+
+Rollercoaster FileReader::readCoaster() {
+  if(!input.is_open()) {
+    printf("Fatal file error\n");
+    exit(EXIT_FAILURE);
+  }
+  
+  Rollercoaster newCoaster(3);
+  int numOfControlpoints;
+  double x, y, z, w;
+  
+  input >> numOfControlpoints;
+  
+  for(int i = 0; i < numOfControlpoints; i++) {
+    input >> x;
+    input >> y;
+    input >> z;
+    input >> w;
+    
+    newCoaster.addPoint(Trackpoint(FREE, x, y, z, w, 1.0f));
+  }
+  
+  for(int i = 0; i < newCoaster.getOrder(); i++) {
+    newCoaster.addPoint(newCoaster.getTracks().at(i));
+  }
+  
+  return newCoaster;
+}

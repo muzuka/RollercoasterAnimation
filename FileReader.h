@@ -11,7 +11,7 @@
 #ifndef FILEREADER_H
 #define FILEREADER_H
 
-#include "BSpline.h"
+#include "Rollercoaster.h"
 #include "Trackpoint.h"
 #include <string>
 #include <iostream>
@@ -28,6 +28,7 @@ public:
 	FileReader(std::string);
 
   BSpline readBSpline();
+  Rollercoaster readCoaster();
 
 };
 
