@@ -20,6 +20,6 @@ private:
   
 public:
   
-}
+};
 
 #endif

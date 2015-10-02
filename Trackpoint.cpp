@@ -9,6 +9,8 @@
  * Sean Brown
  *
  */
+ 
+ #include "Trackpoint.h"
 
  Trackpoint::Trackpoint(Tracktype t, double x, double y, double z, double w, double s) {
  	this->type 	= t;

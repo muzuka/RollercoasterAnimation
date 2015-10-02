@@ -26,18 +26,18 @@ BSpline FileReader::readBSpline() {
   }
   
   BSpline newSpline(3);
-  int numOfControlPoints;
+  int numOfControlpoints;
   double x, y, z, w;
   
-  input >> numOfControlPoints;
+  input >> numOfControlpoints;
   
-  for(int i = 0; i < numOfControlPoints; i++) {
+  for(int i = 0; i < numOfControlpoints; i++) {
     input >> x;
     input >> y;
     input >> z;
     input >> w;
     
-    newSpline.addPoint(controlPoint(FREE, x, y, z, w, 1.0f));
+    newSpline.addPoint(Controlpoint(x, y, z, w, 1.0f));
   }
   
   for(int i = 0; i < newSpline.getOrder(); i++) {

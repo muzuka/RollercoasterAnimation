@@ -14,7 +14,7 @@
 
  #include <vector>
  #include "KnotSequence.h"
- #include "controlPoint.h"
+ #include "Controlpoint.h"
  #include "Vertex.h"
 
 class BSpline {
@@ -23,7 +23,7 @@ private:
 
 	int order;
 	KnotSequence knots;
-	std::vector<controlPoint> controlPoints;
+	std::vector<Controlpoint> Controlpoints;
 
 public:
 
@@ -36,13 +36,13 @@ public:
 	void setX(int, double);
 	void setY(int, double);
 	void setZ(int, double);
-	void addPoint(controlPoint);
+	void addPoint(Controlpoint);
 	void removePoint(int);
 
 	void updateKnots();
 	void clearPoints();
 
-	std::vector<controlPoint> getPoints();
+	std::vector<Controlpoint> getPoints();
 
 	Vertex getPoint(double);
 

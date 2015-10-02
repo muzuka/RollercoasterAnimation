@@ -12,6 +12,7 @@
 #define FILEREADER_H
 
 #include "BSpline.h"
+#include "Trackpoint.h"
 #include <string>
 #include <iostream>
 #include <fstream>

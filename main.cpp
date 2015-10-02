@@ -227,7 +227,7 @@ int main(int argc, char **argv)
     // ********************************************************
     if(showPoints) {
       glBegin(GL_POINTS);
-          for (controlPoint c : coasterTrack.getPoints()) {
+          for (Controlpoint c : coasterTrack.getPoints()) {
             glVertex3f(c.getX(), c.getY(), c.getZ());
           }
       glEnd();

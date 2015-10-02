@@ -12,20 +12,20 @@
  *
  */
 
-#include "controlPoint.h"
+#include "Controlpoint.h"
 
 enum Tracktype {CHAIN, FREE, END};
 
-class Trackpoint : public controlPoint {
+class Trackpoint : public Controlpoint {
 private:
   Tracktype	type;
   
 public:
-	controlPoint(Tracktype, double, double, double, double, double);
-	controlPoint(Tracktype, double, double, double, double);
+	Trackpoint(Tracktype, double, double, double, double, double);
+	Trackpoint(Tracktype, double, double, double, double);
   
   Tracktype getType();
 	void setType(Tracktype);
-}
+};
 
 #endif
