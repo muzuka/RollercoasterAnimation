@@ -23,7 +23,7 @@
 #include "FileReader.h"
 #include <vector>
 #include <stdlib.h>
-#include <time.h>
+#include <chrono>
 #include <math.h>
 #include <fstream>
 #include <stdio.h>
@@ -58,8 +58,9 @@ float increment  = 0.0f;
 float pointSize  = 10.0f;
 float lineLength = 0.01f;
 
-clock_t clicks;
-float velocity   = 0.03f;
+chrono::high_resolution_clock::time_point  lastTime;
+
+float velocity   = 0.01f;
 float u_value    = 1.0f;
 Vertex position;
 
@@ -194,9 +195,10 @@ int main(int argc, char **argv)
 		glfwTerminate();
 		exit(EXIT_FAILURE);
 	}
-	
-    clicks = clock();
-	glfwMakeContextCurrent(window);
+    
+    lastTime = chrono::high_resolution_clock::now();
+    
+    glfwMakeContextCurrent(window);
     glfwSetCursorPosCallback(window, mousePosFunc);
     glfwSetMouseButtonCallback(window, mouseFunc);
     glfwSetKeyCallback(window, keyboardFunc);
@@ -238,23 +240,22 @@ int main(int argc, char **argv)
     glColor3f(1.0f, 0.0f, 0.0f);
 
     if(playAnim) {
-        // get new u-value
-        clicks = clock() - clicks;
-        float time = ((float)clicks)/CLOCKS_PER_SEC;
+        
+        float time = chrono::duration_cast<chrono::milliseconds>(chrono::high_resolution_clock::now() - lastTime).count();
+        time = time/100.0f;
         float distance = velocity * time;
 
-        printf("u - %f = %f\n", distance, u_value);
+        //printf("v(%f) * t(%f) = d(%f)\n", velocity, time, distance);
 
         u_value -= distance;
 
         position = coasterTrack.getPoint(u_value);
-        
-        printf("u = %f\n", u_value);
-        position.print();
 
         glBegin(GL_POINTS);
             glVertex3f(position.getX(), position.getY(), position.getZ());
         glEnd();
+        
+        lastTime = chrono::high_resolution_clock::now();
     }
 
     
