@@ -21,8 +21,13 @@ private:
   Tracktype	type;
   
 public:
+  Trackpoint();
+  Trackpoint(Tracktype);
 	Trackpoint(Tracktype, double, double, double, double, double);
 	Trackpoint(Tracktype, double, double, double, double);
+  
+  void operator=(Vertex);
+  void operator=(Controlpoint);
   
   Tracktype getType();
 	void setType(Tracktype);
