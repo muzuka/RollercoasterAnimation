@@ -28,7 +28,7 @@ public:
 	void setY(int, double);
 	void setZ(int, double);
   
-  void addPoint(Trackpoint);
+  void addTrack(Trackpoint);
   void removeTrack(int);
   
   std::vector<Trackpoint> getTracks();

@@ -37,7 +37,7 @@
     tracks[pos].setZ(z);
   }
   
-  void Rollercoaster::addPoint(Trackpoint n) {
+  void Rollercoaster::addTrack(Trackpoint n) {
     tracks.push_back(n);
   }
   
@@ -58,7 +58,7 @@
     double w = 0;
     unsigned int k = order;
     unsigned int delta;
-    std::vector<Controlpoint> p = controlpoints;
+    std::vector<Trackpoint> p = tracks;
     std::vector<Trackpoint> c = std::vector<Trackpoint>();
     std::vector<Controlpoint> e;
     
