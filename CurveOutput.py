@@ -26,7 +26,7 @@ for spline in curve.splines:
         p = str.replace(str(point.co), '<Vector (', '')
         p = str.replace(p, ')>', '')
         p = str.replace(p, ',', '')
-        file.write(p + '\n')
+        file.write('f ' + p + '\n')
         print(p)
 
 print(count)
