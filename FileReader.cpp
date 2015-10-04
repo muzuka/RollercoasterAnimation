@@ -19,6 +19,10 @@ FileReader::FileReader(std::string file) {
   input = std::ifstream(file.c_str());
 }
 
+float FileReader::getHighest() {
+  return highestPoint;
+}
+
 BSpline FileReader::readBSpline() {
   if(!input.is_open()) {
     printf("Fatal file error\n");
@@ -54,22 +58,37 @@ Rollercoaster FileReader::readCoaster() {
   }
   
   Rollercoaster newCoaster(3);
+  Tracktype currentType;
   int numOfControlpoints;
+  char type;
   double x, y, z, w;
   
   input >> numOfControlpoints;
   
   for(int i = 0; i < numOfControlpoints; i++) {
+    input >> type;
     input >> x;
     input >> y;
     input >> z;
     input >> w;
     
-    newCoaster.addPoint(Trackpoint(FREE, x, y, z, w, 1.0f));
+    if(type == 'c') {
+      currentType = CHAIN;
+    }
+    else if(type == 'f') {
+      currentType = FREE;
+    }
+    else if(type == 'e') {
+      currentType = END;
+    }
+
+    newCoaster.addTrack(Trackpoint(currentType, x, y, z, w, 1.0f));
+    newCoaster.addPoint(Controlpoint(x, y, z, w, 1.0f));
   }
   
   for(int i = 0; i < newCoaster.getOrder(); i++) {
-    newCoaster.addPoint(newCoaster.getTracks().at(i));
+    newCoaster.addTrack(newCoaster.getTracks().at(i));
+    newCoaster.addPoint(newCoaster.getPoints().at(i));
   }
   
   return newCoaster;

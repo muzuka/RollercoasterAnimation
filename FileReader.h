@@ -20,15 +20,18 @@
 class FileReader {
 private:
 
-  std::ifstream input;
+	float highestPoint;
+  	std::ifstream input;
 
 public:
 
 	FileReader();
 	FileReader(std::string);
 
-  BSpline readBSpline();
-  Rollercoaster readCoaster();
+	float getHighest();
+
+  	BSpline readBSpline();
+  	Rollercoaster readCoaster();
 
 };
 
