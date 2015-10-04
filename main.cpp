@@ -42,7 +42,8 @@ int const width             = 1024;
 int const height            = 768;
 
 FileReader input;
-BSpline coasterTrack;
+//BSpline coasterTrack;
+Rollercoaster coaster;
 vector<Vertex> points;
 
 bool playAnim = false;
@@ -60,9 +61,11 @@ float lineLength = 0.01f;
 
 chrono::high_resolution_clock::time_point  lastTime;
 
+float const chainVel   = 0.01f;
 float velocity   = 0.01f;
 float u_value    = 1.0f;
-Vertex position;
+Vertex currentPosition;
+Trackpoint currentTrack;
 
 // given cursor position get projected position
 Vertex getTrackballPoint(double x, double y) {
@@ -179,8 +182,9 @@ int main(int argc, char **argv)
 	
   if(argc == 2) {
     input = FileReader(string(argv[1]));
-    coasterTrack = input.readBSpline();
-    printf("%lu\n", coasterTrack.getPoints().size());
+    //coasterTrack = input.readBSpline();
+    coaster = input.readCoaster();
+    printf("%lu\n", coaster.getPoints().size());
   }
   else {
     printf("Please give a BSpline\n");
@@ -202,88 +206,99 @@ int main(int argc, char **argv)
     glfwSetMouseButtonCallback(window, mouseFunc);
     glfwSetKeyCallback(window, keyboardFunc);
     glfwSetScrollCallback(window, scrollFunc);
-	
+
 	while(!glfwWindowShouldClose(window)) {
 		
-	glViewport(0, 0, width, height);
-	glClear(GL_COLOR_BUFFER_BIT);
-    
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluPerspective(fov, width/height, nearPlane, farPlane);
-    
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    glTranslatef(0.0f, 0.0f, zoom);
-    glRotatef(xRot, 1.0f, 0.0f, 0.0f);
-    glRotatef(zRot, 0.0f, 0.0f, 1.0f);
-    
-    glColor3f(1.0f, 1.0f, 1.0f);
-
-    glPointSize(pointSize);
-
-    // draw control points
-    // ********************************************************
-    if(showPoints) {
-      glBegin(GL_POINTS);
-          for (Controlpoint c : coasterTrack.getPoints()) {
-            glVertex3f(c.getX(), c.getY(), c.getZ());
-          }
-      glEnd();
-    }
-
-
-    //Draw dot/ coaster
-    // ********************************************************
-    glPointSize(20.0f);
-    glColor3f(1.0f, 0.0f, 0.0f);
-
-    if(playAnim) {
+    	glViewport(0, 0, width, height);
+    	glClear(GL_COLOR_BUFFER_BIT);
         
-        float time = chrono::duration_cast<chrono::milliseconds>(chrono::high_resolution_clock::now() - lastTime).count();
-        time = time/100.0f;
-        float distance = velocity * time;
-
-        //printf("v(%f) * t(%f) = d(%f)\n", velocity, time, distance);
-
-        u_value -= distance;
-
-        position = coasterTrack.getPoint(u_value);
-
-        glBegin(GL_POINTS);
-            glVertex3f(position.getX(), position.getY(), position.getZ());
-        glEnd();
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        gluPerspective(fov, width/height, nearPlane, farPlane);
         
-        lastTime = chrono::high_resolution_clock::now();
-    }
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+        glTranslatef(0.0f, 0.0f, zoom);
+        glRotatef(xRot, 1.0f, 0.0f, 0.0f);
+        glRotatef(zRot, 0.0f, 0.0f, 1.0f);
+        
+        glColor3f(1.0f, 1.0f, 1.0f);
 
-    
+        glPointSize(pointSize);
 
-
-    glColor3f(1.0f, 1.0f, 1.0f);
-
-    if (coasterTrack.getPoints().size() > 1) {
-
-        // load points to draw
-        for(float i = 0.0f; i <= 1.0f; i += lineLength) {
-            points.push_back(coasterTrack.getPoint(i));
+        // draw control points
+        // ********************************************************
+        if(showPoints) {
+          glBegin(GL_POINTS);
+              for (Controlpoint c : coaster.getPoints()) {
+                glVertex3f(c.getX(), c.getY(), c.getZ());
+              }
+          glEnd();
         }
 
-        // draw B-spline
-        glBegin(GL_LINES);
-            for (int i = 0; i < points.size(); i++) {
-                glVertex3f(points[i].getX(), points[i].getY(), points[i].getZ());
-                if (i != points.size() - 1) {
-                    glVertex3f(points[i+1].getX(), points[i+1].getY(), points[i+1].getZ());
-                }
-            }
-        glEnd();
-    }
-        
-    points.clear();
 
-    glfwSwapBuffers(window);
- 	glfwPollEvents();
+        //Draw dot/ coaster
+        // ********************************************************
+        glPointSize(20.0f);
+        glColor3f(1.0f, 0.0f, 0.0f);
+
+        if(playAnim) {
+
+            currentTrack = coaster.getTrack(u_value);
+            
+            float time = chrono::duration_cast<chrono::milliseconds>(chrono::high_resolution_clock::now() - lastTime).count();
+            time = time/100.0f;
+
+            if(currentTrack.getType() == CHAIN) {
+                velocity = chainVel;
+            }
+            else if(currentTrack.getType() == FREE) {
+                velocity = sqrt(2 * 9.81f * (input.getHighest() - currentTrack.getY()));
+            }
+
+            float distance = velocity * time;
+
+            printf("v(%f) * t(%f) = d(%f)\n", velocity, time, distance);
+
+            u_value -= distance;
+
+            currentPosition = coaster.getPoint(u_value);
+
+
+            glBegin(GL_POINTS);
+                glVertex3f(currentPosition.getX(), currentPosition.getY(), currentPosition.getZ());
+            glEnd();
+            
+            lastTime = chrono::high_resolution_clock::now();
+        }
+
+        
+
+
+        glColor3f(1.0f, 1.0f, 1.0f);
+
+        if (coaster.getPoints().size() > 1) {
+
+            // load points to draw
+            for(float i = 0.0f; i <= 1.0f; i += lineLength) {
+                points.push_back(coaster.getPoint(i));
+            }
+
+            // draw B-spline
+            glBegin(GL_LINES);
+                for (int i = 0; i < points.size(); i++) {
+                    glVertex3f(points[i].getX(), points[i].getY(), points[i].getZ());
+                    if (i != points.size() - 1) {
+                        glVertex3f(points[i+1].getX(), points[i+1].getY(), points[i+1].getZ());
+                    }
+                }
+            glEnd();
+        }
+            
+        points.clear();
+
+        glfwSwapBuffers(window);
+     	glfwPollEvents();
 
 	}
 	
