@@ -76,7 +76,7 @@ double KnotSequence::getValue(int u) {
 }
 
 int KnotSequence::getDelta(double u) {
-    for(int i = 0; i < knots.size() + order - 1; i++) {
+    for(unsigned int i = 0; i < knots.size() + order - 1; i++) {
         if(u >= knots[i] && u < knots[i+1]) {
             return i;
         }
