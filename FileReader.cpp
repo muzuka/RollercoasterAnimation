@@ -86,10 +86,5 @@ Rollercoaster FileReader::readCoaster() {
     newCoaster.addPoint(Controlpoint(x, y, z, w, 1.0f));
   }
   
-  for(int i = 0; i < newCoaster.getOrder(); i++) {
-    newCoaster.addTrack(newCoaster.getTracks().at(i));
-    newCoaster.addPoint(newCoaster.getPoints().at(i));
-  }
-  
   return newCoaster;
 }
