@@ -84,7 +84,7 @@ Vertex BSpline::getPoint(double u) {
 	
     delta = knots.getDelta(u);
     for(int i = 0; i <= k - 1; i++) {
-        if(delta - i > p.size() - 1) {
+        if((unsigned int)delta - i > p.size() - 1) {
             c.push_back(p.at(p.size() - 1));
         }
         else {
