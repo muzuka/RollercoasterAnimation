@@ -34,6 +34,9 @@ enum {NONE, ROTATE, ZOOM};
 
 GLFWwindow* window;
 
+GLfloat const RED[3] = {1.0f, 0.0f, 0.0f};
+GLfloat const WHITE[3] = {1.0f, 1.0f, 1.0f};
+
 float const rotAngleScale   = 100.0f;
 float const fov             = 60.0f;
 float const nearPlane       = 1.0f;
@@ -45,6 +48,7 @@ FileReader input;
 //BSpline coasterTrack;
 Rollercoaster coaster;
 vector<Vertex> points;
+vector<Trackpoint> tracks;
 
 bool playAnim = false;
 bool showPoints = false;
@@ -61,9 +65,10 @@ float lineLength = 0.01f;
 
 chrono::high_resolution_clock::time_point  lastTime;
 
-float const chainVel   = 0.01f;
-float velocity   = 0.01f;
-float u_value    = 1.0f;
+float const chainVel  = 0.01f;
+float u_value_start   = 0.99f;
+float velocity        = 0.01f;
+float u_value         = u_value_start;
 Vertex currentPosition;
 Trackpoint currentTrack;
 
@@ -92,7 +97,7 @@ void mousePosFunc(GLFWwindow* win, double x, double y) {
     Vertex currentPoint;
     Vertex rotAxis;
     double velocity, rotAngle;
-    GLfloat objectForm[16];
+    //GLfloat objectForm[16];
 
     if(movement == ROTATE) {
 
@@ -148,7 +153,7 @@ void keyboardFunc(GLFWwindow* win, int key, int scancode, int action, int mods) 
             case GLFW_KEY_ENTER:
                 playAnim = true;
                 lastTime = chrono::high_resolution_clock::now();
-                u_value = 1.0f;
+                u_value = u_value_start;
                 break;
             case GLFW_KEY_C:
                 showPoints = !showPoints;
@@ -245,6 +250,7 @@ int main(int argc, char **argv)
         if(playAnim) {
 
             currentTrack = coaster.getTrack(u_value);
+            //currentTrack.print();
             
             float time = chrono::duration_cast<chrono::milliseconds>(chrono::high_resolution_clock::now() - lastTime).count();
             time = time/100.0f;
@@ -255,6 +261,8 @@ int main(int argc, char **argv)
             else if(currentTrack.getType() == FREE) {
                 velocity = sqrt(2 * 9.81f * (input.getHighest() - currentTrack.getY()));
             }
+            
+            //velocity = 0.01f;
 
             float distance = velocity * time;
 
@@ -282,11 +290,19 @@ int main(int argc, char **argv)
             // load points to draw
             for(float i = 0.0f; i <= 1.0f; i += lineLength) {
                 points.push_back(coaster.getPoint(i));
+                //tracks.push_back(coaster.getTrack(i));
             }
 
             // draw B-spline
             glBegin(GL_LINES);
-                for (int i = 0; i < points.size(); i++) {
+                for (unsigned int i = 0; i < points.size(); i++) {
+                    //if(tracks[i].getType() == FREE) {
+                      //glColor3f(1.0f, 1.0f, 1.0f);
+                    //}
+                    //else if(tracks[i].getType() == CHAIN) {
+                      //glColor3f(1.0f, 1.0f, 0.0f);
+                    //}
+                  
                     glVertex3f(points[i].getX(), points[i].getY(), points[i].getZ());
                     if (i != points.size() - 1) {
                         glVertex3f(points[i+1].getX(), points[i+1].getY(), points[i+1].getZ());
