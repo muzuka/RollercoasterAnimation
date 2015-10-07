@@ -36,6 +36,8 @@ GLFWwindow* window;
 
 GLfloat const RED[3] = {1.0f, 0.0f, 0.0f};
 GLfloat const WHITE[3] = {1.0f, 1.0f, 1.0f};
+GLfloat const GREEN[3] = {0.0f, 1.0f, 0.0f};
+GLfloat const BLUE[3] = {0.0f, 0.0f, 1.0f};
 
 float const rotAngleScale   = 100.0f;
 float const fov             = 60.0f;
@@ -147,6 +149,22 @@ void scrollFunc(GLFWwindow* win, double x, double y) {
     zoom += y;
 }
 
+void viewAxis() {
+    glBegin(GL_LINES);
+        glColor3fv(RED);
+        glVertex3f(0.0f, 0.0f, 0.0f);
+        glVertex3f(1.0f, 0.0f, 0.0f);
+
+        glColor3fv(GREEN);
+        glVertex3f(0.0f, 0.0f, 0.0f);
+        glVertex3f(0.0f, 1.0f, 0.0f);
+
+        glColor3fv(BLUE);
+        glVertex3f(0.0f, 0.0f, 0.0f);
+        glVertex3f(0.0f, 0.0f, 1.0f);
+    glEnd();
+}
+
 void keyboardFunc(GLFWwindow* win, int key, int scancode, int action, int mods) {
     if(action == GLFW_PRESS) {
         switch(key) {
@@ -227,7 +245,7 @@ int main(int argc, char **argv)
         glRotatef(xRot, 1.0f, 0.0f, 0.0f);
         glRotatef(zRot, 0.0f, 0.0f, 1.0f);
         
-        glColor3f(1.0f, 1.0f, 1.0f);
+        glColor3fv(WHITE);
 
         glPointSize(pointSize);
 
@@ -245,7 +263,7 @@ int main(int argc, char **argv)
         //Draw dot/ coaster
         // ********************************************************
         glPointSize(20.0f);
-        glColor3f(1.0f, 0.0f, 0.0f);
+        glColor3fv(RED);
 
         if(playAnim) {
 
@@ -259,7 +277,8 @@ int main(int argc, char **argv)
                 velocity = chainVel;
             }
             else if(currentTrack.getType() == FREE) {
-                velocity = sqrt(2 * 9.81f * (input.getHighest() - currentTrack.getY()));
+                velocity = 0.001f * sqrt(2 * 9.81f * (input.getHighest() - currentTrack.getZ()));
+                printf("v(%f) = sqrt(2 * 9.81f * (%f) - %f)\n", velocity, input.getHighest(), currentTrack.getZ());
             }
             
             //velocity = 0.01f;
@@ -280,10 +299,9 @@ int main(int argc, char **argv)
             lastTime = chrono::high_resolution_clock::now();
         }
 
-        
+        viewAxis();
 
-
-        glColor3f(1.0f, 1.0f, 1.0f);
+        glColor3fv(WHITE);
 
         if (coaster.getPoints().size() > 1) {
 
