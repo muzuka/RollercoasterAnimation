@@ -12,10 +12,12 @@
 #include <iostream>
 
 FileReader::FileReader() {
+  highestPoint = 0.0f;
   input = std::ifstream();
 }
 
 FileReader::FileReader(std::string file) {
+  highestPoint = 0.0f;
   input = std::ifstream(file.c_str());
 }
 
@@ -40,6 +42,9 @@ BSpline FileReader::readBSpline() {
     input >> y;
     input >> z;
     input >> w;
+
+    if(y > highestPoint)
+      highestPoint = y;
     
     newSpline.addPoint(Controlpoint(x, y, z, w, 1.0f));
   }
@@ -71,6 +76,9 @@ Rollercoaster FileReader::readCoaster() {
     input >> y;
     input >> z;
     input >> w;
+
+    if(y > highestPoint)
+      highestPoint = y;
     
     if(type == 'c') {
       currentType = CHAIN;
