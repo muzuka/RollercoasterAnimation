@@ -325,7 +325,7 @@ int main(int argc, char **argv)
             lastTime = chrono::high_resolution_clock::now();
         }
 
-        if(u_value < 0.0f || velocity <= 0.0f)
+        if(u_value < 0.0f || velocity <= 0.001f)
             u_value = u_value_start;
 
         if(showAxis)
