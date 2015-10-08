@@ -47,6 +47,10 @@ public:
 	std::vector<Controlpoint> getPoints();
 
 	Vertex getPoint(double);
+  
+  BSpline getDerivative();
+  
+  static BSpline getDerivative(BSpline);
 
 };
 

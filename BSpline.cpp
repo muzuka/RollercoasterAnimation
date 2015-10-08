@@ -107,3 +107,11 @@ Vertex BSpline::getPoint(double u) {
     }
 	return c.at(0);
 }
+
+BSpline BSpline::getDerivative() {
+  
+}
+
+BSpline BSpline::getDerivative(BSpline b) {
+  
+}
