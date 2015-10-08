@@ -39,6 +39,18 @@ Trackpoint::Trackpoint(Tracktype t, double x, double y, double z, double s) {
     this->weight = 0.0f;
     this->size 	= s;
  }
+
+Trackpoint Trackpoint::operator*(double arg) {
+  return Trackpoint(type, x*arg, y*arg, z*arg, weight, 1.0f);
+}
+
+Trackpoint Trackpoint::operator+(Trackpoint arg) {
+  return Trackpoint(type, x + arg.getX(), y + arg.getY(), z + arg.getZ(), weight, 1.0f);
+}
+
+Trackpoint Trackpoint::operator-(Trackpoint arg) {
+  return Trackpoint(type, x - arg.getX(), y - arg.getY(), z - arg.getZ(), weight, 1.0f);
+}
  
  void Trackpoint::operator=(Vertex v) {
    this->x = v.getX();
@@ -62,4 +74,18 @@ Trackpoint::Trackpoint(Tracktype t, double x, double y, double z, double s) {
 
 void Trackpoint::setType(Tracktype t) {
 	this->type = t;
+}
+
+void Trackpoint::printType() {
+  switch(type) {
+    case CHAIN:
+      printf("CHAIN\n");
+      break;
+    case FREE:
+      printf("FREE\n");
+      break;
+    case END:
+      printf("END\n");
+      break;
+  }
 }
