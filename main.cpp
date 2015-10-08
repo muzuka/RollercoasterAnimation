@@ -59,6 +59,7 @@ vector<Trackpoint> tracks;
 bool playAnim = false;
 bool showPoints = false;
 bool showAxis = false;
+bool showTracktype = false;
 
 // general variables
 Vertex lastPoint;
@@ -185,11 +186,25 @@ double getVelocity(Tracktype t) {
         return 0.001f * sqrt(2 * 9.81f * (input.getHighest() - currentTrack.getY()));
     }
      else if(t == END) {
-        return min(chainVel, velocity * 0.9f);
+        return min(chainVel, velocity * 0.99f);
     }
     else {
         return chainVel;
     }
+}
+
+void setTrackColor(unsigned int i) {
+  switch(tracks[i].getType()) {
+  case FREE:
+    glColor3fv(WHITE);
+    break;
+  case CHAIN:
+    glColor3fv(GREEN);
+    break;
+  case END:
+    glColor3fv(RED);
+    break;
+  }
 }
 
 // keyboard input:
@@ -218,6 +233,9 @@ void keyboardFunc(GLFWwindow* win, int key, int scancode, int action, int mods) 
                 break;
             case GLFW_KEY_N:
                 increment -= 0.1f;
+                break;
+            case GLFW_KEY_T:
+                showTracktype = !showTracktype;
                 break;
             case GLFW_KEY_LEFT:
                 zRot -= 15.0f;
@@ -338,15 +356,17 @@ int main(int argc, char **argv)
             // load points to draw
             for(float i = 0.0f; i <= 1.0f; i += lineLength) {
                 points.push_back(coaster.getPoint(i));
+                tracks.push_back(coaster.getTrack(i));
             }
 
             // draw B-spline
             glBegin(GL_LINES);
-                for (unsigned int i = 0; i < points.size(); i++) {
+                for (unsigned int i = 0; i < points.size()-1; i++) {
+                    if(showTracktype)
+                      setTrackColor(i);
+                  
                     glVertex3f(points[i].getX(), points[i].getY(), points[i].getZ());
-                    if (i != points.size() - 1) {
-                        glVertex3f(points[i+1].getX(), points[i+1].getY(), points[i+1].getZ());
-                    }
+                    glVertex3f(points[i+1].getX(), points[i+1].getY(), points[i+1].getZ());
                 }
             glEnd();
         }
