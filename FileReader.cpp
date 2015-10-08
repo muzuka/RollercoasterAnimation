@@ -32,6 +32,7 @@ BSpline FileReader::readBSpline() {
   }
   
   BSpline newSpline(3);
+  Controlpoint firstPoint;
   int numOfControlpoints;
   double x, y, z, w;
   
@@ -43,15 +44,17 @@ BSpline FileReader::readBSpline() {
     input >> z;
     input >> w;
 
+    if(i == numOfControlpoints - 1) {
+      firstPoint = Controlpoint(x, y, z, w, 1.0f);
+    }
+
     if(y > highestPoint)
       highestPoint = y;
     
     newSpline.addPoint(Controlpoint(x, y, z, w, 1.0f));
   }
   
-  for(int i = 0; i < newSpline.getOrder(); i++) {
-    newSpline.addPoint(newSpline.getPoints().at(i));
-  }
+  newSpline.insertPoint(0, firstPoint);
   
   return newSpline;
 }
@@ -63,6 +66,8 @@ Rollercoaster FileReader::readCoaster() {
   }
   
   Rollercoaster newCoaster(3);
+  Controlpoint firstPoint;
+  Trackpoint firstTrack;
   Tracktype currentType;
   int numOfControlpoints;
   char type;
@@ -90,9 +95,17 @@ Rollercoaster FileReader::readCoaster() {
       currentType = END;
     }
 
+    if(i == numOfControlpoints - 1) {
+      firstPoint = Controlpoint(x, y, z, w, 1.0f);
+      firstTrack = Trackpoint(currentType, x, y, z, w, 1.0f);
+    }
+
     newCoaster.addTrack(Trackpoint(currentType, x, y, z, w, 1.0f));
     newCoaster.addPoint(Controlpoint(x, y, z, w, 1.0f));
   }
+
+  newCoaster.insertPoint(0, firstPoint);
+  newCoaster.insertTrack(0, firstTrack);
   
   return newCoaster;
 }
