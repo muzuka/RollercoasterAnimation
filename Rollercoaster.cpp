@@ -84,7 +84,5 @@
               i--;
           }
       }
-      printf("%f = ", u);
-      c.at(0).print();
     return c.at(0);
   }
