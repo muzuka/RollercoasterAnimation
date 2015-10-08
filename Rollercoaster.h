@@ -28,6 +28,7 @@ public:
 	void setY(int, double);
 	void setZ(int, double);
   
+  void insertTrack(int, Trackpoint);
   void addTrack(Trackpoint);
   void removeTrack(int);
   

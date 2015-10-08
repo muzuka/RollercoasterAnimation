@@ -36,6 +36,10 @@
     controlpoints[pos].setZ(z);
     tracks[pos].setZ(z);
   }
+
+  void Rollercoaster::insertTrack(int p, Trackpoint tp) {
+    tracks.insert(tracks.begin() + p, tp);
+  }
   
   void Rollercoaster::addTrack(Trackpoint n) {
     tracks.push_back(n);
