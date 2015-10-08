@@ -65,7 +65,7 @@ Vertex lastPoint;
 int   movement   = NONE;
 int   order      = 3;
 float zoom       = -30.0f;
-float xRot       = 0.0f;
+float xRot       = 30.0f;
 float zRot       = 0.0f;
 float increment  = 0.0f;
 float pointSize  = 10.0f;
@@ -73,7 +73,7 @@ float lineLength = 0.001f;
 
 chrono::high_resolution_clock::time_point  lastTime;
 
-float const chainVel  = 0.01f;
+float const chainVel  = 0.005f;
 float u_value_start   = 0.99f;
 float velocity        = 0.01f;
 float u_value         = u_value_start;
@@ -151,11 +151,16 @@ void mouseFunc(GLFWwindow* win, int button, int action, int mods) {
 
 }
 
+// Use mouse wheel to zoom
 void scrollFunc(GLFWwindow* win, double x, double y) {
 
     zoom += y;
 }
 
+// Shows axis
+// Red is x-axis
+// Green is y-axis
+// Blue is z-axis
 void viewAxis() {
     glBegin(GL_LINES);
         glColor3fv(RED);
@@ -174,22 +179,33 @@ void viewAxis() {
 
 double getVelocity(Tracktype t) {
     if(t == CHAIN) {
+        printf("Rising up chain.\n");
         return chainVel;
     }
     else if(t == FREE) {
-        //printf("v(%f) = sqrt(2 * 9.81f * (%f) - %f)\n", velocity, input.getHighest(), currentTrack.getZ());
         return 0.001f * sqrt(2 * 9.81f * (input.getHighest() - currentTrack.getY()));
     }
      else if(t == END) {
-         return min(chainVel, velocity * 0.1f);
+        printf("Slowing down.\n");
+        return min(chainVel, velocity * 0.9f);
+    }
+    else {
+        return chainVel;
     }
 }
 
+// keyboard input:
+/*
+* Enter: Toggles animation
+* a key: displays axis
+* c key: displays control points
+* arrows: rotates camera
+*/
 void keyboardFunc(GLFWwindow* win, int key, int scancode, int action, int mods) {
     if(action == GLFW_PRESS) {
         switch(key) {
             case GLFW_KEY_ENTER:
-                playAnim = true;
+                playAnim = !playAnim;
                 lastTime = chrono::high_resolution_clock::now();
                 u_value = u_value_start;
                 break;
@@ -228,7 +244,6 @@ int main(int argc, char **argv)
 	
   if(argc == 2) {
     input = FileReader(string(argv[1]));
-    //coasterTrack = input.readBSpline();
     coaster = input.readCoaster();
     printf("%lu\n", coaster.getPoints().size());
   }
@@ -311,6 +326,9 @@ int main(int argc, char **argv)
             
             lastTime = chrono::high_resolution_clock::now();
         }
+
+        if(u_value < 0.0f)
+            u_value = u_value_start;
 
         if(showAxis)
             viewAxis();
