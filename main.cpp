@@ -34,11 +34,13 @@ enum {NONE, ROTATE, ZOOM};
 
 GLFWwindow* window;
 
-GLfloat const RED[3] = {1.0f, 0.0f, 0.0f};
+// colors
 GLfloat const WHITE[3] = {1.0f, 1.0f, 1.0f};
+GLfloat const RED[3] = {1.0f, 0.0f, 0.0f};
 GLfloat const GREEN[3] = {0.0f, 1.0f, 0.0f};
 GLfloat const BLUE[3] = {0.0f, 0.0f, 1.0f};
 
+// view variables
 float const rotAngleScale   = 100.0f;
 float const fov             = 60.0f;
 float const nearPlane       = 1.0f;
@@ -47,14 +49,18 @@ int const width             = 1024;
 int const height            = 768;
 
 FileReader input;
-//BSpline coasterTrack;
 Rollercoaster coaster;
+
+// collections
 vector<Vertex> points;
 vector<Trackpoint> tracks;
 
+// flags
 bool playAnim = false;
 bool showPoints = false;
+bool showAxis = false;
 
+// general variables
 Vertex lastPoint;
 int   movement   = NONE;
 int   order      = 3;
@@ -63,7 +69,7 @@ float xRot       = 0.0f;
 float zRot       = 0.0f;
 float increment  = 0.0f;
 float pointSize  = 10.0f;
-float lineLength = 0.01f;
+float lineLength = 0.001f;
 
 chrono::high_resolution_clock::time_point  lastTime;
 
@@ -93,6 +99,7 @@ Vertex getTrackballPoint(double x, double y) {
     return retVector;
 }
 
+// tracks mouse position
 void mousePosFunc(GLFWwindow* win, double x, double y) {
 
     Vertex direction;
@@ -165,6 +172,19 @@ void viewAxis() {
     glEnd();
 }
 
+double getVelocity(Tracktype t) {
+    if(t == CHAIN) {
+        return chainVel;
+    }
+    else if(t == FREE) {
+        //printf("v(%f) = sqrt(2 * 9.81f * (%f) - %f)\n", velocity, input.getHighest(), currentTrack.getZ());
+        return 0.001f * sqrt(2 * 9.81f * (input.getHighest() - currentTrack.getY()));
+    }
+     else if(t == END) {
+         return min(chainVel, velocity * 0.1f);
+    }
+}
+
 void keyboardFunc(GLFWwindow* win, int key, int scancode, int action, int mods) {
     if(action == GLFW_PRESS) {
         switch(key) {
@@ -172,6 +192,9 @@ void keyboardFunc(GLFWwindow* win, int key, int scancode, int action, int mods) 
                 playAnim = true;
                 lastTime = chrono::high_resolution_clock::now();
                 u_value = u_value_start;
+                break;
+            case GLFW_KEY_A:
+                showAxis = !showAxis;
                 break;
             case GLFW_KEY_C:
                 showPoints = !showPoints;
@@ -268,29 +291,19 @@ int main(int argc, char **argv)
         if(playAnim) {
 
             currentTrack = coaster.getTrack(u_value);
-            //currentTrack.print();
             
             float time = chrono::duration_cast<chrono::milliseconds>(chrono::high_resolution_clock::now() - lastTime).count();
             time = time/100.0f;
 
-            if(currentTrack.getType() == CHAIN) {
-                velocity = chainVel;
-            }
-            else if(currentTrack.getType() == FREE) {
-                velocity = 0.001f * sqrt(2 * 9.81f * (input.getHighest() - currentTrack.getZ()));
-                printf("v(%f) = sqrt(2 * 9.81f * (%f) - %f)\n", velocity, input.getHighest(), currentTrack.getZ());
-            }
-            
-            //velocity = 0.01f;
+            velocity = getVelocity(currentTrack.getType());
 
             float distance = velocity * time;
 
-            printf("v(%f) * t(%f) = d(%f)\n", velocity, time, distance);
+            //printf("v(%f) * t(%f) = d(%f)\n", velocity, time, distance);
 
             u_value -= distance;
 
             currentPosition = coaster.getPoint(u_value);
-
 
             glBegin(GL_POINTS);
                 glVertex3f(currentPosition.getX(), currentPosition.getY(), currentPosition.getZ());
@@ -299,7 +312,8 @@ int main(int argc, char **argv)
             lastTime = chrono::high_resolution_clock::now();
         }
 
-        viewAxis();
+        if(showAxis)
+            viewAxis();
 
         glColor3fv(WHITE);
 
@@ -308,19 +322,11 @@ int main(int argc, char **argv)
             // load points to draw
             for(float i = 0.0f; i <= 1.0f; i += lineLength) {
                 points.push_back(coaster.getPoint(i));
-                //tracks.push_back(coaster.getTrack(i));
             }
 
             // draw B-spline
             glBegin(GL_LINES);
                 for (unsigned int i = 0; i < points.size(); i++) {
-                    //if(tracks[i].getType() == FREE) {
-                      //glColor3f(1.0f, 1.0f, 1.0f);
-                    //}
-                    //else if(tracks[i].getType() == CHAIN) {
-                      //glColor3f(1.0f, 1.0f, 0.0f);
-                    //}
-                  
                     glVertex3f(points[i].getX(), points[i].getY(), points[i].getZ());
                     if (i != points.size() - 1) {
                         glVertex3f(points[i+1].getX(), points[i+1].getY(), points[i+1].getZ());
