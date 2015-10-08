@@ -51,6 +51,10 @@ void BSpline::setZ(int pos, double z) {
     controlpoints.at(pos).setZ(z);
 }
 
+void BSpline::insertPoint(int p, Controlpoint cp) {
+	controlpoints.insert(controlpoints.begin() + p, cp);
+}
+
 void BSpline::addPoint(Controlpoint point) {
 	controlpoints.push_back(point);
 	knots = KnotSequence((int)controlpoints.size(), order);

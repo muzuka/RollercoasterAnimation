@@ -36,6 +36,8 @@ public:
 	void setX(int, double);
 	void setY(int, double);
 	void setZ(int, double);
+
+	void insertPoint(int, Controlpoint);
 	void addPoint(Controlpoint);
 	void removePoint(int);
 
