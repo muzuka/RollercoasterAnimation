@@ -179,14 +179,12 @@ void viewAxis() {
 
 double getVelocity(Tracktype t) {
     if(t == CHAIN) {
-        printf("Rising up chain.\n");
         return chainVel;
     }
     else if(t == FREE) {
         return 0.001f * sqrt(2 * 9.81f * (input.getHighest() - currentTrack.getY()));
     }
      else if(t == END) {
-        printf("Slowing down.\n");
         return min(chainVel, velocity * 0.9f);
     }
     else {
@@ -281,7 +279,7 @@ int main(int argc, char **argv)
         glLoadIdentity();
         glTranslatef(0.0f, 0.0f, zoom);
         glRotatef(xRot, 1.0f, 0.0f, 0.0f);
-        glRotatef(zRot, 0.0f, 0.0f, 1.0f);
+        glRotatef(zRot, 0.0f, 1.0f, 0.0f);
         
         glColor3fv(WHITE);
 
@@ -327,7 +325,7 @@ int main(int argc, char **argv)
             lastTime = chrono::high_resolution_clock::now();
         }
 
-        if(u_value < 0.0f)
+        if(u_value < 0.0f || velocity <= 0.0f)
             u_value = u_value_start;
 
         if(showAxis)
