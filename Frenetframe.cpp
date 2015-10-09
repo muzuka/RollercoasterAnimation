@@ -37,12 +37,16 @@ void Frenetframe::setBinormal(Vertex b) {
   this->b = b;
 }
 
-Fernetframe Frenetframe::computeFrenet(Vertex first, Vertex second, Vertex, last) {
+Fernetframe Frenetframe::computeFrenet(Rollercoaster coaster, double u, Vertex first, Vertex second, Vertex, last) {
   double h = ((last - (second * 2) + first) / 2).length();
   double c = (last - first).length();
   double r = (c * c) + (4 * (h * h)) / (8 * h);
+
+  Rollercoaster dCoaster = coaster.getDerivative();
   
-  this->t = last - first;
+  this->t = dCoaster.getPoint(u);
   
-  this->n = 
+  this->n; 
+
+  this->b;
 }

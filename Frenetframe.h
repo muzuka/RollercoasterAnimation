@@ -1,7 +1,7 @@
 #ifndef FRENETFRAME_H
 #define FRENETFRAME_H
 
-#include "Vertex.h"
+#include "Rollercoaster.h"
 
 class Frenetframe {
 private:
@@ -23,7 +23,7 @@ public:
   void setNormal(Vertex);
   void setBinormal(Vertex);
   
-  static Frenetframe computeFrenet(Vertex, Vertex, Vertex);
+  static Frenetframe computeFrenet(Rollercoaster, double, Vertex, Vertex, Vertex);
 };
 
 #endif
