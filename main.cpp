@@ -158,6 +158,54 @@ void scrollFunc(GLFWwindow* win, double x, double y) {
     zoom += y;
 }
 
+// keyboard input:
+/*
+* Enter: Toggles animation
+* a key: displays axis
+* c key: displays control points
+* arrows: rotates camera
+*/
+void keyboardFunc(GLFWwindow* win, int key, int scancode, int action, int mods) {
+    if(action == GLFW_PRESS) {
+        switch(key) {
+            case GLFW_KEY_ENTER:
+                playAnim = !playAnim;
+                lastTime = chrono::high_resolution_clock::now();
+                u_value = u_value_start;
+                break;
+            case GLFW_KEY_A:
+                showAxis = !showAxis;
+                break;
+            case GLFW_KEY_C:
+                showPoints = !showPoints;
+                break;
+            case GLFW_KEY_M:
+                increment += 0.1f;
+                break;
+            case GLFW_KEY_N:
+                increment -= 0.1f;
+                break;
+            case GLFW_KEY_T:
+                showTracktype = !showTracktype;
+                break;
+            case GLFW_KEY_LEFT:
+                zRot -= 15.0f;
+                break;
+            case GLFW_KEY_RIGHT:
+                zRot += 15.0f;
+                break;
+            case GLFW_KEY_UP:
+                xRot += 15.0f;
+                break;
+            case GLFW_KEY_DOWN:
+                xRot -= 15.0f;
+                break;
+            default:
+                break;
+        }
+    }
+}
+
 // Shows axis
 // Red is x-axis
 // Green is y-axis
@@ -207,51 +255,25 @@ void setTrackColor(unsigned int i) {
   }
 }
 
-// keyboard input:
-/*
-* Enter: Toggles animation
-* a key: displays axis
-* c key: displays control points
-* arrows: rotates camera
-*/
-void keyboardFunc(GLFWwindow* win, int key, int scancode, int action, int mods) {
-    if(action == GLFW_PRESS) {
-        switch(key) {
-            case GLFW_KEY_ENTER:
-                playAnim = !playAnim;
-                lastTime = chrono::high_resolution_clock::now();
-                u_value = u_value_start;
-                break;
-            case GLFW_KEY_A:
-                showAxis = !showAxis;
-                break;
-            case GLFW_KEY_C:
-                showPoints = !showPoints;
-                break;
-            case GLFW_KEY_M:
-                increment += 0.1f;
-                break;
-            case GLFW_KEY_N:
-                increment -= 0.1f;
-                break;
-            case GLFW_KEY_T:
-                showTracktype = !showTracktype;
-                break;
-            case GLFW_KEY_LEFT:
-                zRot -= 15.0f;
-                break;
-            case GLFW_KEY_RIGHT:
-                zRot += 15.0f;
-                break;
-            case GLFW_KEY_UP:
-                xRot += 15.0f;
-                break;
-            case GLFW_KEY_DOWN:
-                xRot -= 15.0f;
-                break;
-            default:
-                break;
+void displaySpline(Rollercoaster c) {
+    if (c.getPoints().size() > 1) {
+
+        // load points to draw
+        for(float i = 0.0f; i <= 1.0f; i += lineLength) {
+            points.push_back(c.getPoint(i));
+            tracks.push_back(c.getTrack(i));
         }
+
+        // draw B-spline
+        glBegin(GL_LINES);
+            for (unsigned int i = 0; i < points.size()-1; i++) {
+                if(showTracktype)
+                  setTrackColor(i);
+              
+                glVertex3f(points[i].getX(), points[i].getY(), points[i].getZ());
+                glVertex3f(points[i+1].getX(), points[i+1].getY(), points[i+1].getZ());
+            }
+        glEnd();
     }
 }
 
@@ -351,27 +373,10 @@ int main(int argc, char **argv)
 
         glColor3fv(WHITE);
 
-        if (coaster.getPoints().size() > 1) {
-
-            // load points to draw
-            for(float i = 0.0f; i <= 1.0f; i += lineLength) {
-                points.push_back(coaster.getPoint(i));
-                tracks.push_back(coaster.getTrack(i));
-            }
-
-            // draw B-spline
-            glBegin(GL_LINES);
-                for (unsigned int i = 0; i < points.size()-1; i++) {
-                    if(showTracktype)
-                      setTrackColor(i);
-                  
-                    glVertex3f(points[i].getX(), points[i].getY(), points[i].getZ());
-                    glVertex3f(points[i+1].getX(), points[i+1].getY(), points[i+1].getZ());
-                }
-            glEnd();
-        }
+        displaySpline(coaster);
             
         points.clear();
+        tracks.clear();
 
         glfwSwapBuffers(window);
      	glfwPollEvents();
