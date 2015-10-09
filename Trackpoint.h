@@ -25,6 +25,8 @@ public:
 	Trackpoint(Tracktype);
 	Trackpoint(Tracktype, double, double, double, double, double);
 	Trackpoint(Tracktype, double, double, double, double);
+  Trackpoint(Tracktype, Vertex);
+  Trackpoint(Tracktype, Controlpoint);
   
 	Trackpoint operator*(double);
 	Trackpoint operator+(Trackpoint);

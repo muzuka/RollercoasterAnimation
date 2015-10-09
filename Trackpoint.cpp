@@ -39,6 +39,22 @@ Trackpoint::Trackpoint(Tracktype t, double x, double y, double z, double s) {
     this->weight = 0.0f;
     this->size 	= s;
  }
+ 
+ Trackpoint::Trackpoint(Tracktype t, Vertex v) {
+  this->type = t;
+  this->x 	= v.getX();
+ 	this->y 	= v.getY();
+ 	this->z 	= v.getZ();
+ }
+ 
+ Trackpoint::Trackpoint(Tracktype t, Controlpoint c) {
+  this->type = t;
+  this->x 	= c.getX();
+ 	this->y 	= c.getY();
+ 	this->z 	= c.getZ();
+  this->weight = c.getWeight();
+  this->size 	= c.getSize();
+ }
 
 Trackpoint Trackpoint::operator*(double arg) {
   return Trackpoint(type, x*arg, y*arg, z*arg, weight, 1.0f);
