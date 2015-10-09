@@ -107,13 +107,3 @@ Vertex BSpline::getPoint(double u) {
     }
 	return c.at(0);
 }
-
-BSpline BSpline::getDerivative() {
-  BSpline newSpline = BSpline(order - 1);
-
-  for(int i = 0; i < controlpoints.size() - 1; i++) {
-  	newSpline.addPoint((controlpoints[i+1] - controlpoints[i]) * (order/(knots.getValue(i+order+1) - knots.getValue(i+1))));
-  }
-
-  return newSpline;
-}
