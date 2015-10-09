@@ -1,4 +1,13 @@
 
+/*
+ * Frenetframe class implementation
+ *  - represents frenet frame.
+ *
+ *
+ * Sean Brown
+ *
+ */
+
 #include "Frenetframe.h"
 
 Frenetframe::Frenetframe() {

@@ -1,3 +1,13 @@
+
+/*
+ * Frenetframe class
+ *  - represents frenet frame.
+ *
+ *
+ * Sean Brown
+ *
+ */
+
 #ifndef FRENETFRAME_H
 #define FRENETFRAME_H
 
