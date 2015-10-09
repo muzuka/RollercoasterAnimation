@@ -23,7 +23,7 @@ public:
   void setNormal(Vertex);
   void setBinormal(Vertex);
   
-  static Frenetframe computeFrenet(Rollercoaster, double, Vertex, Vertex, Vertex);
+  static Frenetframe computeFrenet(Vertex, Vertex, Vertex);
 };
 
 #endif

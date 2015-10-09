@@ -7,7 +7,7 @@ Frenetframe::Frenetframe() {
   this->b = Vertex();
 }
 
-Frenetframe::Frenetframe(Vertex t, Vertex n, Vertex, b) {
+Frenetframe::Frenetframe(Vertex t, Vertex n, Vertex b) {
   this->t = t;
   this->n = n;
   this->b = b;
@@ -37,16 +37,29 @@ void Frenetframe::setBinormal(Vertex b) {
   this->b = b;
 }
 
-Fernetframe Frenetframe::computeFrenet(Rollercoaster coaster, double u, Vertex first, Vertex second, Vertex, last) {
-  double h = ((last - (second * 2) + first) / 2).length();
-  double c = (last - first).length();
-  double r = (c * c) + (4 * (h * h)) / (8 * h);
-
-  Rollercoaster dCoaster = coaster.getDerivative();
+Frenetframe Frenetframe::computeFrenet(Vertex first, Vertex second, Vertex third) {
+  //double h = ((third - (second * 2) + first) / 2).length();
+  //double c = (third - first).length();
+  //double r = (c * c) + (4 * (h * h)) / (8 * h);
   
-  this->t = dCoaster.getPoint(u);
+  Frenetframe frame = Frenetframe();
+  Vertex tangent = (third - second);
+  tangent.normalize();
+  bool straight = (second - first) == (third - second);
   
-  this->n; 
-
-  this->b;
+  frame.setTangent(tangent);
+  if(straight) {
+    frame.setNormal(Vertex(0.0f, 1.0f, 0.0f));
+    frame.setBinormal(Vertex::crossProduct(tangent, frame.getNormal()));
+  }
+  else {
+    Vertex midPoint = ((third - first) / 2.0f) + first;
+    Vertex force = (midPoint - second);
+    force.normalize();
+    
+    frame.setNormal(force);
+    frame.setBinormal(Vertex::crossProduct(frame.getNormal(), tangent));
+  }
+  
+  return frame;
 }
