@@ -21,6 +21,7 @@
 
 #include "Rollercoaster.h"
 #include "FileReader.h"
+#include "Frenetframe.h"
 #include <vector>
 #include <stdlib.h>
 #include <chrono>
@@ -55,11 +56,18 @@ Rollercoaster coaster;
 vector<Vertex> points;
 vector<Trackpoint> tracks;
 
+vector<Vertex> leftPoints;
+vector<Vertex> rightPoints;
+
+vector<Trackpoint> leftTracks;
+vector<Trackpoint> rightTracks;
+
 // flags
 bool playAnim = false;
 bool showPoints = false;
 bool showAxis = false;
 bool showTracktype = false;
+bool showTracks = false;
 
 // general variables
 Vertex lastPoint;
@@ -163,7 +171,9 @@ void scrollFunc(GLFWwindow* win, double x, double y) {
 * Enter: Toggles animation
 * a key: displays axis
 * c key: displays control points
+* t key: displays colored tracks
 * arrows: rotates camera
+* space: displays attempt at tracks
 */
 void keyboardFunc(GLFWwindow* win, int key, int scancode, int action, int mods) {
     if(action == GLFW_PRESS) {
@@ -184,6 +194,9 @@ void keyboardFunc(GLFWwindow* win, int key, int scancode, int action, int mods) 
                 break;
             case GLFW_KEY_N:
                 increment -= 0.1f;
+                break;
+            case GLFW_KEY_SPACE:
+                showTracks = !showTracks;
                 break;
             case GLFW_KEY_T:
                 showTracktype = !showTracktype;
@@ -255,24 +268,71 @@ void setTrackColor(unsigned int i) {
   }
 }
 
+// Ensures u is between 0 and 1
+double wrapAroundCurve(double u) {
+  if(u > 1.0f) {
+    return u - 1.0f;
+  }
+  else {
+    return 1.0f - u;
+  }
+}
+
 void displaySpline(Rollercoaster c) {
     if (c.getPoints().size() > 1) {
+      
+        Frenetframe frame;
 
         // load points to draw
         for(float i = 0.0f; i <= 1.0f; i += lineLength) {
-            points.push_back(c.getPoint(i));
-            tracks.push_back(c.getTrack(i));
+            Vertex currentPoint = c.getPoint(i);
+            Trackpoint currentTrack = c.getTrack(i);
+            Vertex leftPoint, rightPoint;
+            
+            if(showTracks) {
+            
+              frame = Frenetframe::computeFrenet(c.getPoint(wrapAroundCurve(i - lineLength)), currentPoint, c.getPoint(wrapAroundCurve(i + lineLength)));
+              
+              leftPoint = frame.getBinormal() + currentPoint;
+              rightPoint = (frame.getBinormal() * -1) + currentPoint;
+            
+              leftPoints.push_back(leftPoint);
+              rightPoints.push_back(rightPoint);
+              leftTracks.push_back(Trackpoint(currentTrack.getType(), leftPoint));
+              rightTracks.push_back(Trackpoint(currentTrack.getType(), rightPoint));
+            
+            }
+            else {
+              points.push_back(currentPoint);
+              tracks.push_back(currentTrack);
+            }
         }
 
         // draw B-spline
         glBegin(GL_LINES);
-            for (unsigned int i = 0; i < points.size()-1; i++) {
-                if(showTracktype)
-                  setTrackColor(i);
               
-                glVertex3f(points[i].getX(), points[i].getY(), points[i].getZ());
-                glVertex3f(points[i+1].getX(), points[i+1].getY(), points[i+1].getZ());
-            }
+              if(showTracks) {
+              
+                for (unsigned int i = 0; i < leftPoints.size()-1; i++) {
+              
+                  glVertex3f(leftPoints[i].getX(), leftPoints[i].getY(), leftPoints[i].getZ());
+                  glVertex3f(leftPoints[i+1].getX(), leftPoints[i+1].getY(), leftPoints[i+1].getZ());
+                  
+                  glVertex3f(rightPoints[i].getX(), rightPoints[i].getY(), rightPoints[i].getZ());
+                  glVertex3f(rightPoints[i+1].getX(), rightPoints[i+1].getY(), rightPoints[i+1].getZ());
+                }
+              }
+              else {
+                
+                for(unsigned int i = 0; i < points.size() - 1; i++) {
+                
+                  if(showTracktype)
+                    setTrackColor(i);
+                
+                  glVertex3f(points[i].getX(), points[i].getY(), points[i].getZ());
+                  glVertex3f(points[i+1].getX(), points[i+1].getY(), points[i+1].getZ());
+                }
+              }
         glEnd();
     }
 }
@@ -375,8 +435,10 @@ int main(int argc, char **argv)
 
         displaySpline(coaster);
             
-        points.clear();
-        tracks.clear();
+        leftPoints.clear();
+        rightPoints.clear();
+        leftTracks.clear();
+        rightTracks.clear();
 
         glfwSwapBuffers(window);
      	glfwPollEvents();
