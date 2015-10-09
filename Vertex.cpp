@@ -32,6 +32,14 @@ Vertex::Vertex() {
  Vertex Vertex::operator-(Vertex v) {
  	return Vertex(v.x - this->x, v.y - this->y, v.z - this->z);
  }
+ 
+ Vertex Vertex::operator/(double arg) {
+   return Vertex(this->x / arg, this->y / arg, this->z / arg);
+ }
+ 
+ bool Vertex::operator==(Vertex x) {
+   return (x.getX() == this->x) && (x.getY() == this->y) && (x.getZ() == this->z);
+ }
 
 double Vertex::getX() {
 	return this->x;

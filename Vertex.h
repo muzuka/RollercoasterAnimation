@@ -26,6 +26,8 @@ public:
 	Vertex operator*(double);
 	Vertex operator+(Vertex);
 	Vertex operator-(Vertex);
+  Vertex operator/(double);
+  bool   operator==(Vertex);
 
 	double getX();
 	double getY();
