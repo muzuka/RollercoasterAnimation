@@ -17,6 +17,7 @@ obj = bpy.data.objects["NurbsCurve"]
 
 curve = obj.data
 
+# enter file name here
 file = open('UltimateCurve.txt', 'w')
 
 for spline in curve.splines:
