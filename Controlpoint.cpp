@@ -30,6 +30,18 @@ Controlpoint::Controlpoint() {
     this->weight 	= 0.0f;
     this->size 		= s;
  }
+
+Controlpoint Controlpoint::operator*(double arg) {
+    return Controlpoint(x*arg, y*arg, z*arg, weight, 1.0f);
+}
+
+Controlpoint Controlpoint::operator+(Controlpoint arg) {
+    return Controlpoint(x + arg.getX(), y + arg.getY(), z + arg.getZ(), weight, 1.0f);
+}
+
+Controlpoint Controlpoint::operator-(Controlpoint arg) {
+    return Controlpoint(x - arg.getX(), y - arg.getY(), z - arg.getZ(), weight, 1.0f);
+}
  
  double Controlpoint::getSize() {
    return size;

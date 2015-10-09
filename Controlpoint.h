@@ -23,11 +23,15 @@ public:
 	Controlpoint();
 	Controlpoint(double, double, double, double, double);
 	Controlpoint(double, double, double, double);
-  
-  double getSize();
-  double getWeight();
 
-  bool isClicked(double, double);
+	Controlpoint operator*(double);
+	Controlpoint operator+(Controlpoint);
+	Controlpoint operator-(Controlpoint);
+  
+	double getSize();
+	double getWeight();
+
+	bool isClicked(double, double);
 };
 
 #endif
