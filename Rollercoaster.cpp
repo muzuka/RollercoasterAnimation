@@ -90,14 +90,3 @@
       }
     return c.at(0);
   }
-
-  Rollercoaster Rollercoaster::getDerivative() {
-    Rollercoaster newCoaster = Rollercoaster(order - 1);
-
-    for(int i = 0; i < controlpoints.size() - 1; i++) {
-      newCoaster.addTrack((tracks[i+1] - tracks[i]) * (order/(knots.getValue(i+order+1) - knots.getValue(i+1))));
-      newCoaster.addPoint((controlpoints[i+1] - controlpoints[i]) * (order/(knots.getValue(i+order+1) - knots.getValue(i+1))));
-    }
-
-    return newCoaster;
-  }

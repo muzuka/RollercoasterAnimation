@@ -36,8 +36,6 @@ public:
   void clearPoints();
   
   Trackpoint getTrack(double);
-
-  Rollercoaster getDerivative();
 };
 
 #endif
