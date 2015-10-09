@@ -48,9 +48,7 @@ public:
 
 	Vertex getPoint(double);
   
-  BSpline getDerivative();
-  
-  static BSpline getDerivative(BSpline);
+  	BSpline getDerivative();
 
 };
 
