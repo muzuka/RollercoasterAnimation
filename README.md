@@ -1,2 +1,46 @@
 # RollercoasterAnimation
-A general rollercoaster animation
+A B-spline based rollercoaster animation using OpenGL and GLFW.
+
+## Controls:
+
+### Essential controls
+* Enter key -> Starts the animation
+* Arrow keys -> Rotates the track
+
+### Debug controls
+* C key -> Shows control points
+* T key -> Shows track type (normal, chain, brakes)
+* A key -> Shows axis
+
+## Getting Started
+
+These instructions will help with running the program.
+
+Use this as the base compile instruction
+
+~~~
+g++ -o main main.cpp BSpline.cpp Controlpoint.cpp FileReader.cpp Frenetframe.cpp KnotSequence.cpp Rollercoaster.cpp Trackpoint.cpp Vertex.cpp -std=c++0x
+~~~
+
+OpenGL has platform specific flags so try these anywhere around "-o main" and after g++.
+
+For Mac:
+~~~
+-framework Opengl
+~~~
+
+For Linux:
+~~~
+-lGL
+~~~
+
+For Windows:
+~~~
+-lopengl32
+~~~
+
+You will need GLFW installed to run this program.
+Just add the following if you have GLFW installed.
+~~~
+-lglfw3
+~~~
