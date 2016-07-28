@@ -52,3 +52,8 @@ When executing the program just include the path to the desired track.
 
 I created a script for Blender that outputs a selected curve called CurveOutput.py.
 This allows you to create tracks in blender and use them in the program.
+
+You do have to enter tracktypes manually though. If there are none it will default to normal track.
+e = end track which applies brakes.
+f = normal track
+c = chain track which sets car to a constant velocity
