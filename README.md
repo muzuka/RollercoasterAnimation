@@ -44,3 +44,11 @@ Just add the following if you have GLFW installed.
 ~~~
 -lglfw3
 ~~~
+
+## Track loading
+
+This project stores tracks in text files and loads them in the command line.
+When executing the program just include the path to the desired track.
+
+I created a script for Blender that outputs a selected curve called CurveOutput.py.
+This allows you to create tracks in blender and use them in the program.
