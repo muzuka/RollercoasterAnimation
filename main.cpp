@@ -278,35 +278,41 @@ double wrapAroundCurve(double u) {
   }
 }
 
+void loadPoints(Rollercoaster c, Frenetframe *frame) {
+    for(float i = 0.0f; i <= 1.0f; i += lineLength) {
+        Vertex currentPoint = c.getPoint(i);
+        Trackpoint currentTrack = c.getTrack(i);
+        Vertex leftPoint, rightPoint;
+        
+        // loads second set of tracks
+        if(showTracks) {
+        
+          *frame = Frenetframe::computeFrenet(c.getPoint(wrapAroundCurve(i - lineLength)), currentPoint, c.getPoint(wrapAroundCurve(i + lineLength)));
+          
+          leftPoint = frame->getBinormal() + currentPoint;
+          rightPoint = (frame->getBinormal() * -1) + currentPoint;
+        
+          leftPoints.push_back(leftPoint);
+          rightPoints.push_back(rightPoint);
+          leftTracks.push_back(Trackpoint(currentTrack.getType(), leftPoint));
+          rightTracks.push_back(Trackpoint(currentTrack.getType(), rightPoint));
+        
+        }
+        // default track
+        else {
+          points.push_back(currentPoint);
+          tracks.push_back(currentTrack);
+        }
+    }
+}
+
 void displaySpline(Rollercoaster c) {
     if (c.getPoints().size() > 1) {
       
         Frenetframe frame;
 
         // load points to draw
-        for(float i = 0.0f; i <= 1.0f; i += lineLength) {
-            Vertex currentPoint = c.getPoint(i);
-            Trackpoint currentTrack = c.getTrack(i);
-            Vertex leftPoint, rightPoint;
-            
-            if(showTracks) {
-            
-              frame = Frenetframe::computeFrenet(c.getPoint(wrapAroundCurve(i - lineLength)), currentPoint, c.getPoint(wrapAroundCurve(i + lineLength)));
-              
-              leftPoint = frame.getBinormal() + currentPoint;
-              rightPoint = (frame.getBinormal() * -1) + currentPoint;
-            
-              leftPoints.push_back(leftPoint);
-              rightPoints.push_back(rightPoint);
-              leftTracks.push_back(Trackpoint(currentTrack.getType(), leftPoint));
-              rightTracks.push_back(Trackpoint(currentTrack.getType(), rightPoint));
-            
-            }
-            else {
-              points.push_back(currentPoint);
-              tracks.push_back(currentTrack);
-            }
-        }
+        loadPoints(c, &frame);
 
         // draw B-spline
         glBegin(GL_LINES);
@@ -403,19 +409,17 @@ int main(int argc, char **argv)
 
         if(playAnim) {
 
+            float time;
+            float distance;
+
             currentTrack = coaster.getTrack(u_value);
             
-            float time = chrono::duration_cast<chrono::milliseconds>(chrono::high_resolution_clock::now() - lastTime).count();
+            time = chrono::duration_cast<chrono::milliseconds>(chrono::high_resolution_clock::now() - lastTime).count();
             time = time/100.0f;
-
             velocity = getVelocity(currentTrack.getType());
-
-            float distance = velocity * time;
-
-            //printf("v(%f) * t(%f) = d(%f)\n", velocity, time, distance);
+            distance = velocity * time;
 
             u_value -= distance;
-
             currentPosition = coaster.getPoint(u_value);
 
             glBegin(GL_POINTS);
@@ -423,6 +427,7 @@ int main(int argc, char **argv)
             glEnd();
             
             lastTime = chrono::high_resolution_clock::now();
+            //printf("v(%f) * t(%f) = d(%f)\n", velocity, time, distance);
         }
 
         if(u_value < 0.0f || velocity <= 0.001f)
